@@ -386,7 +386,13 @@ it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-Kazumasa Utashiro
+=over
+
+=item Kazumasa Utashiro
+
+=item L<https://github.com/kaz-utashiro/Text-ANSI-Fold>
+
+=back
 
 =cut
 
