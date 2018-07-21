@@ -64,7 +64,7 @@
          "web" : "https://github.com/kaz-utashiro/Text-ANSI-Fold"
       }
    },
-   "version" : "0.01",
+   "version" : "0.02",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kaz Utashiro <kaz@utashiro.com>"
