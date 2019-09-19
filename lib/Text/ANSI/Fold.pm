@@ -222,8 +222,9 @@ sub text {
 sub retrieve {
     my $obj = shift;
     local *_ = \$obj->{text};
-    return '' if $_ eq '';
+    return '' if not defined $_;
     (my $folded, $_) = $obj->fold($_, @_);
+    $_ = undef if length == 0;
     $folded;
 }
 
