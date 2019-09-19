@@ -12,11 +12,9 @@ use Text::VisualWidth::PP 'vwidth';
 use Exporter 'import';
 our @EXPORT_OK = qw(&ansi_fold);
 
-my $myfold = __PACKAGE__->new();
-
 sub ansi_fold {
     my($text, $width, @option) = @_;
-    $myfold->fold($text, width => $width, @option);
+    __PACKAGE__->configure->fold($text, width => $width, @option);
 }
 ######################################################################
 
@@ -70,7 +68,9 @@ sub new {
 }
 
 sub configure {
-    my $obj = ref $_[0] ? $_[0] : $myfold;
+    my $obj = ref $_[0] ? $_[0] : do {
+	state $private = new __PACKAGE__;
+    };
     shift;
     croak "invalid parameter" if @_ % 2;
     while (@_ >= 2) {
