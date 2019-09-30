@@ -14,7 +14,7 @@ our @EXPORT_OK = qw(&ansi_fold);
 
 sub ansi_fold {
     my($text, $width, @option) = @_;
-    __PACKAGE__->configure->fold($text, width => $width, @option);
+    __PACKAGE__->fold($text, width => $width, @option);
 }
 ######################################################################
 
@@ -82,7 +82,10 @@ sub configure {
 }
 
 sub fold {
-    my $obj = shift;
+    my $obj = ref $_[0] ? $_[0] : do {
+	state $private = configure();
+    };
+    shift;
 
     local $_ = shift // '';
     my %opt = @_;
