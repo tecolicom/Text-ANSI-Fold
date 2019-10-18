@@ -529,7 +529,7 @@ If the cut-off text start with space or prohibited characters
 as much as possible.
 
 If the trimmed text end with prohibited characters (e.g. opening
-parenthesis), they are ran-out to the the of next line, if it fits to
+parenthesis), they are ran-out to the head of next line, if it fits to
 maximum width.
 
 Default B<linebreak> mode is B<LINEBREAK_NONE> and can be set one of
@@ -600,10 +600,10 @@ are not supported by these modules.
 
 ANSI escape code definition.
 
-=item L<https://www.w3.org/TR/2009/NOTE-jlreq-20090604/>
+=item L<https://www.w3.org/TR/2012/NOTE-jlreq-20120403/>
 
 Requirements for Japanese Text Layout,
-W3C Working Group Note 4 June 2009
+W3C Working Group Note 3 April 2012
 
 =back
 
@@ -627,4 +627,4 @@ it under the same terms as Perl itself.
 =cut
 
 #  LocalWords:  ansi Unicode undef bool diff cdif sdif SGR Kazumasa
-#  LocalWords:  Utashiro
+#  LocalWords:  Utashiro linebreak LINEBREAK runin runout
