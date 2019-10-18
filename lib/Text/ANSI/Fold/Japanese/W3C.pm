@@ -19,9 +19,12 @@ Character	UCS	Name	Remark
 ‘	2018	LEFT SINGLE QUOTATION MARK	used horizontal composition
 “	201C	LEFT DOUBLE QUOTATION MARK	used horizontal composition
 （	0028	LEFT PARENTHESIS	
+(
 〔	3014	LEFT TORTOISE SHELL BRACKET	
 ［	005B	LEFT SQUARE BRACKET	
+[
 ｛	007B	LEFT CURLY BRACKET	
+{
 〈	3008	LEFT ANGLE BRACKET	
 《	300A	LEFT DOUBLE ANGLE BRACKET	
 「	300C	LEFT CORNER BRACKET	
@@ -40,9 +43,12 @@ Character	UCS	Name	Remark
 ’	2019	RIGHT SINGLE QUOTATION MARK	used horizontal composition
 ”	201D	RIGHT DOUBLE QUOTATION MARK	used horizontal composition
 ）	0029	RIGHT PARENTHESIS	
+)
 〕	3015	RIGHT TORTOISE SHELL BRACKET	
 ］	005D	RIGHT SQUARE BRACKET	
+]
 ｝	007D	RIGHT CURLY BRACKET	
+}
 〉	3009	RIGHT ANGLE BRACKET	
 》	300B	RIGHT DOUBLE ANGLE BRACKET	
 」	300D	RIGHT CORNER BRACKET	
@@ -68,7 +74,9 @@ END
 cl_04 => <<'END',
 Character	UCS	Name	Remark
 ！	0021	EXCLAMATION MARK	
+!
 ？	003F	QUESTION MARK	
+?
 ‼	203C	DOUBLE EXCLAMATION MARK	
 ⁇	2047	DOUBLE QUESTION MARK	
 ⁈	2048	QUESTION EXCLAMATION MARK	
@@ -80,7 +88,9 @@ cl_05 => <<'END',
 Character	UCS	Name	Remark
 ・	30FB	KATAKANA MIDDLE DOT	
 ：	003A	COLON	
+:
 ；	003B	SEMICOLON	used horizontal composition
+;
 END
     
 # A.6 Full stops
@@ -88,6 +98,7 @@ cl_06 => <<'END',
 Character	UCS	Name	Remark
 。	3002	IDEOGRAPHIC FULL STOP	
 ．	002E	FULL STOP	used horizontal composition
+.
 END
     
 # A.7 Commas
@@ -95,6 +106,7 @@ cl_07 => <<'END',
 Character	UCS	Name	Remark
 、	3001	IDEOGRAPHIC COMMA	
 ，	002C	COMMA	used horizontal composition
+,
 END
     
 # A.8 Inseparable characters
@@ -175,9 +187,12 @@ END
 cl_12 => <<'END',
 Character	UCS	Name	Remark
 ￥	00A5	YEN SIGN	
+¥
 ＄	0024	DOLLAR SIGN	
+$
 ￡	00A3	POUND SIGN	
 ＃	0023	NUMBER SIGN	
+#
 €	20AC	EURO SIGN	
 №	2116	NUMERO SIGN	
 END
@@ -191,6 +206,7 @@ Character	UCS	Name	Remark
 ℃	2103	DEGREE CELSIUS	
 ￠	00A2	CENT SIGN	
 ％	0025	PERCENT SIGN	
+%
 ‰	2030	PER MILLE SIGN	
 ㏋	33CB	SQUARE HP	
 ℓ	2113	SCRIPT SMALL L	
