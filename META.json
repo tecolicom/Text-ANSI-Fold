@@ -1,5 +1,5 @@
 {
-   "abstract" : "Text folding with ANSI sequence and Asian wide characters.",
+   "abstract" : "Text folding library supporting ANSI terminal sequence and Asian wide characters with prohibition character handling.",
    "author" : [
       "- Kazumasa Utashiro."
    ],
@@ -64,7 +64,7 @@
          "web" : "https://github.com/kaz-utashiro/Text-ANSI-Fold"
       }
    },
-   "version" : "0.07",
+   "version" : "1.01",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kaz Utashiro <kaz@utashiro.com>"
