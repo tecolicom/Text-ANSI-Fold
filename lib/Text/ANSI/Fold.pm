@@ -361,11 +361,11 @@ sub chops {
 	for my $w (@{$width}) {
 	    if ($w == 0) {
 		push @chops, '';
-		next;
 	    }
-	    if ((my $chop = $obj->retrieve(width => $w)) ne '') {
+	    elsif ((my $chop = $obj->retrieve(width => $w)) ne '') {
 		push @chops, $chop;
-	    } else {
+	    }
+	    else {
 		last;
 	    }
 	}
