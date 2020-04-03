@@ -658,7 +658,7 @@ ANSI escape code definition.
 Requirements for Japanese Text Layout,
 W3C Working Group Note 3 April 2012
 
-=item <http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-048.pdf>
+=item L<http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-048.pdf>
 
 Control Functions for Coded Character Sets
 
