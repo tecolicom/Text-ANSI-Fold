@@ -139,10 +139,10 @@ sub configure {
 }
 
 my @color_stack;
-my $reset;
-sub set_reset { $reset = shift };
-sub get_reset {
-    ("$reset", $reset && do { $reset = ''; @color_stack = () })[0];
+my @reset;
+sub put_reset { @reset = shift };
+sub pop_reset {
+    @reset ? do { @color_stack = (); pop @reset } : '';
 }
 
 sub fold {
@@ -178,8 +178,7 @@ sub fold {
     my $folded = '';
     my $eol = '';
     my $room = $width;
-    @color_stack = ();
-    $reset = '';
+    @color_stack = @reset = ();
 
     while (length) {
 
@@ -198,15 +197,15 @@ sub fold {
 	    next;
 	}
 	if (s/\A($reset_re)//) {
-	    set_reset($1);
+	    put_reset($1);
 	    next;
 	}
 
 	last if $room < 1;
 	last if $room != $width and &_startWideSpacing and $room < 2;
 
-	if ($reset) {
-	    $folded .= get_reset();
+	if (@reset) {
+	    $folded .= pop_reset();
 	}
 
 	if (s/\A($color_re)//) {
@@ -249,7 +248,7 @@ sub fold {
 	my($s, $e) = ($-[3], $+[3]);
 	my $l = $e - $s;
 	if ($room + $l < $width and $l + length($tail) <= $width) {
-	    $_ = substr($folded, $s, $l, '') . get_reset() . $_;
+	    $_ = substr($folded, $s, $l, '') . pop_reset() . $_;
 	    $room += $l;
 	}
     }
@@ -264,19 +263,12 @@ sub fold {
 	and ${^PREMATCH} ne ''
 	and (my $w = vwidth $+{runout}) <= $runout) {
 	$folded = ${^PREMATCH};
-	if ($reset) {
-	    $_ = ${^MATCH} . $reset . $_;
-	    @color_stack = () if $+{color};
-	    $reset = '';
-	} else {
-	    $_ = ${^MATCH} . $_;
-	}
+	$_ = join '', ${^MATCH}, @reset, $_;
+	pop_reset() if $+{color};
 	$room += $w;
     }
 
-    if ($reset) {
-	$folded .= get_reset();
-    }
+    $folded .= pop_reset() if @reset;
 
     $room += $margin;
 
