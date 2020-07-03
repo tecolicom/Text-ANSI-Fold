@@ -43,7 +43,7 @@
       "runtime" : {
          "requires" : {
             "Text::VisualWidth::PP" : "0.05",
-            "perl" : "5.014"
+            "perl" : "v5.14.0"
          }
       },
       "test" : {
