@@ -4,7 +4,7 @@ use utf8;
 
 use Text::ANSI::Fold;
 
-my $fold = new Text::ANSI::Fold;
+my $fold = Text::ANSI::Fold->new;
 
 sub chops {
     my $obj = shift;
