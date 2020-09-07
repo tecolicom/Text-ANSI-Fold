@@ -639,6 +639,10 @@ characters with prohibited character handling.
 
 Command line utility using L<Text::ANSI::Fold>.
 
+=item L<Text::ANSI::Fold::Util>
+
+Collection of utilities using L<Text::ANSI::Fold> module.
+
 =item L<App::sdif>
 
 L<Text::ANSI::Fold> was originally implemented in B<sdif> command for
