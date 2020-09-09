@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "1.08";
+our $VERSION = "1.09";
 
 use Carp;
 use Text::VisualWidth::PP 'vwidth';
