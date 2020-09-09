@@ -19,16 +19,20 @@ cl_01 => <<'END',
 Character	UCS	Name	Common name	Remarks
 ‘	2018	LEFT SINGLE QUOTATION MARK	左シングル引用符，左シングルクォーテーションマーク	used in horizontal composition
 “	201C	LEFT DOUBLE QUOTATION MARK	左ダブル引用符，左ダブルクォーテーションマーク	used in horizontal composition
-（	0028	LEFT PARENTHESIS	始め小括弧，始め丸括弧
+(	0028	LEFT PARENTHESIS	始め小括弧，始め丸括弧
+（	FF08	FULLWIDTH LEFT PARENTHESIS	始め小括弧，始め丸括弧
 〔	3014	LEFT TORTOISE SHELL BRACKET	始めきっこう（亀甲）括弧
-［	005B	LEFT SQUARE BRACKET	始め大括弧，始め角括弧
-｛	007B	LEFT CURLY BRACKET	始め中括弧，始め波括弧
+[	005B	LEFT SQUARE BRACKET	始め大括弧，始め角括弧
+［	FF3B	FULLWIDTH LEFT SQUARE BRACKET	始め大括弧，始め角括弧
+{	007B	LEFT CURLY BRACKET	始め中括弧，始め波括弧
+｛	FF5B	FULLWIDTH LEFT CURLY BRACKET	始め中括弧，始め波括弧
 〈	3008	LEFT ANGLE BRACKET	始め山括弧
 《	300A	LEFT DOUBLE ANGLE BRACKET	始め二重山括弧
 「	300C	LEFT CORNER BRACKET	始めかぎ括弧
 『	300E	LEFT WHITE CORNER BRACKET	始め二重かぎ括弧
 【	3010	LEFT BLACK LENTICULAR BRACKET	始めすみ付き括弧
-｟	2985	LEFT WHITE PARENTHESIS	始め二重パーレン，始め二重括弧
+⦅	2985	LEFT WHITE PARENTHESIS	始め二重パーレン，始め二重括弧
+｟	FF5F	FULLWIDTH LEFT WHITE PARENTHESIS	始め二重パーレン，始め二重括弧
 〘	3018	LEFT WHITE TORTOISE SHELL BRACKET	始め二重きっこう（亀甲）括弧
 〖	3016	LEFT WHITE LENTICULAR BRACKET	始めすみ付き括弧（白）
 «	00AB	LEFT-POINTING DOUBLE ANGLE QUOTATION MARK	始め二重山括弧引用記号，始めギュメ
@@ -40,16 +44,20 @@ cl_02 => <<'END',
 Character	UCS	Name	Common name	Remarks
 ’	2019	RIGHT SINGLE QUOTATION MARK	右シングル引用符，右シングルクォーテーションマーク	used in horizontal composition
 ”	201D	RIGHT DOUBLE QUOTATION MARK	右ダブル引用符，右ダブルクォーテーションマーク	used in horizontal composition
-）	0029	RIGHT PARENTHESIS	終わり小括弧，終わり丸括弧
+)	0029	RIGHT PARENTHESIS	終わり小括弧，終わり丸括弧
+）	FF09	FULLWIDTH RIGHT PARENTHESIS	終わり小括弧，終わり丸括弧
 〕	3015	RIGHT TORTOISE SHELL BRACKET	終わりきっこう（亀甲）括弧
-］	005D	RIGHT SQUARE BRACKET	終わり大括弧，終わり角括弧
-｝	007D	RIGHT CURLY BRACKET	終わり中括弧，終わり波括弧
+]	005D	RIGHT SQUARE BRACKET	終わり大括弧，終わり角括弧
+］	FF3D	FULLWIDTH RIGHT SQUARE BRACKET	終わり大括弧，終わり角括弧
+}	007D	RIGHT CURLY BRACKET	終わり中括弧，終わり波括弧
+｝	FF5D	FULLWIDTH RIGHT CURLY BRACKET	終わり中括弧，終わり波括弧
 〉	3009	RIGHT ANGLE BRACKET	終わり山括弧
 》	300B	RIGHT DOUBLE ANGLE BRACKET	終わり二重山括弧
 」	300D	RIGHT CORNER BRACKET	終わりかぎ括弧
 』	300F	RIGHT WHITE CORNER BRACKET	終わり二重かぎ括弧
 】	3011	RIGHT BLACK LENTICULAR BRACKET	終わりすみ付き括弧
-｠	2986	RIGHT WHITE PARENTHESIS	終わり二重パーレン，終わり二重括弧
+⦆	2986	RIGHT WHITE PARENTHESIS	終わり二重パーレン，終わり二重括弧
+｠	FF60	FULLWIDTH RIGHT WHITE PARENTHESIS	終わり二重パーレン，終わり二重括弧
 〙	3019	RIGHT WHITE TORTOISE SHELL BRACKET	終わり二重きっこう（亀甲）括弧
 〗	3017	RIGHT WHITE LENTICULAR BRACKET	終わりすみ付き括弧（白）
 »	00BB	RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK	終わり二重山括弧引用記号，終わりギュメ
@@ -68,8 +76,10 @@ END
 # A.4 Dividing punctuation marks
 cl_04 => <<'END',
 Character	UCS	Name	Common name	Remarks
-！	0021	EXCLAMATION MARK	感嘆符
-？	003F	QUESTION MARK	疑問符
+!	0021	EXCLAMATION MARK	感嘆符
+！	FF01	FULLWIDTH EXCLAMATION MARK	感嘆符
+?	003F	QUESTION MARK	疑問符
+？	FF1F	FULLWIDTH QUESTION MARK	疑問符
 ‼	203C	DOUBLE EXCLAMATION MARK	感嘆符二つ
 ⁇	2047	DOUBLE QUESTION MARK	疑問符二つ
 ⁈	2048	QUESTION EXCLAMATION MARK	疑問符感嘆符
@@ -80,22 +90,26 @@ END
 cl_05 => <<'END',
 Character	UCS	Name	Common name	Remarks
 ・	30FB	KATAKANA MIDDLE DOT	中点
-：	003A	COLON	コロン
-；	003B	SEMICOLON	セミコロン	used in horizontal composition
+:	003A	COLON	コロン
+：	FF1A	FULLWIDTH COLON	コロン
+;	003B	SEMICOLON	セミコロン	used in horizontal composition
+；	FF1B	FULLWIDTH SEMICOLON	セミコロン	used in horizontal composition
 END
     
 # A.6 Full stops
 cl_06 => <<'END',
 Character	UCS	Name	Common name	Remarks
 。	3002	IDEOGRAPHIC FULL STOP	句点
-．	002E	FULL STOP	ピリオド	used in horizontal composition
+.	002E	FULL STOP	ピリオド	used in horizontal composition
+．	FF0E	FULLWIDTH FULL STOP	ピリオド	used in horizontal composition
 END
     
 # A.7 Commas
 cl_07 => <<'END',
 Character	UCS	Name	Common name	Remarks
 、	3001	IDEOGRAPHIC COMMA	読点
-，	002C	COMMA	コンマ	used in horizontal composition
+,	002C	COMMA	コンマ	used in horizontal composition
+，	FF0C	FULLWIDTH COMMA	コンマ	used in horizontal composition
 END
     
 # A.8 Inseparable characters
@@ -175,10 +189,14 @@ END
 # A.12 Prefixed abbreviations
 cl_12 => <<'END',
 Character	UCS	Name	Common name	Remarks
-￥	00A5	YEN SIGN	円記号
-＄	0024	DOLLAR SIGN	ドル記号
-￡	00A3	POUND SIGN	ポンド記号
-＃	0023	NUMBER SIGN	番号記号，井げた
+¥	00A5	YEN SIGN	円記号
+￥	FFE5	FULLWIDTH YEN SIGN	円記号
+$	0024	DOLLAR SIGN	ドル記号
+＄	FF04	FULLWIDTH DOLLAR SIGN	ドル記号
+£	00A3	POUND SIGN	ポンド記号
+￡	FFE1	FULLWIDTH POUND SIGN	ポンド記号
+#	0023	NUMBER SIGN	番号記号，井げた
+＃	FF03	FULLWIDTH NUMBER SIGN	番号記号，井げた
 €	20AC	EURO SIGN	ユーロ記号
 №	2116	NUMERO SIGN	全角NO
 END
@@ -190,8 +208,10 @@ Character	UCS	Name	Common name	Remarks
 ′	2032	PRIME	分	proportionally-spaced
 ″	2033	DOUBLE PRIME	秒	proportionally-spaced
 ℃	2103	DEGREE CELSIUS	セ氏度記号
-￠	00A2	CENT SIGN	セント記号
-％	0025	PERCENT SIGN	パーセント
+¢	00A2	CENT SIGN	セント記号
+￠	FFE0	FULLWIDTH CENT SIGN	セント記号
+%	0025	PERCENT SIGN	パーセント
+％	FF05	FULLWIDTH PERCENT SIGN	パーセント
 ‰	2030	PER MILLE SIGN	パーミル
 ㏋	33CB	SQUARE HP	HP， ホースパワー（馬力）
 ℓ	2113	SCRIPT SMALL L	リットル
