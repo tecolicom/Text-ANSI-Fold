@@ -4,8 +4,9 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.01";
+our $VERSION = "2.02";
 
+use Data::Dumper;
 use Carp;
 use Text::VisualWidth::PP 'vwidth';
 
@@ -188,22 +189,28 @@ sub fold {
     my $room = $width;
     @color_stack = @reset = ();
     my $yield_re = $expand ? qr/[^\e\n\f\r\t]/ : qr/[^\e\n\f\r]/;
+
+  FOLD:
     while (length) {
 
+	# newline
 	if (s/\A(\r*\n)//) {
 	    $eol = $1;
 	    last;
 	}
+	# formfeed
 	if (s/\A([\f\r]+)//) {
 	    last if length == 0;
 	    $folded .= $1;
 	    $room = $width;
 	    next;
 	}
+	# ECMA-48 OPERATING SYSTEM COMMAND
 	if (s/\A($control_re)//) {
 	    $folded .= $1;
 	    next;
 	}
+	# reset
 	if (s/\A($reset_re)//) {
 	    put_reset($1);
 	    next;
@@ -216,19 +223,41 @@ sub fold {
 	    $folded .= pop_reset();
 	}
 
+	# ANSI color sequence
 	if (s/\A($color_re)//) {
 	    $folded .= $1;
 	    push @color_stack, $1;
 	    next;
 	}
 
+	# tab
 	if ($expand and s/\A(\t+)//) {
 	    my $space = $tabstop * length($1) - ($width - $room) % $tabstop;
 	    $_ = ' ' x $space . $_;
 	    next;
 	}
 
-	if (s/\A(\e*${yield_re}+)//) {
+	# backspace
+	my $bs = 0;
+	while (s/\A(?:\X\cH+)++(?<c>\X|\z)//p) {
+	    my $w = vwidth($+{c});
+	    if ($w > $room) {
+		if ($folded eq '') {
+		    $folded .= ${^MATCH};
+		    $room -= $w;
+		} else {
+		    $_ = ${^MATCH} . $_;
+		}
+		last FOLD;
+	    }
+	    $folded .= ${^MATCH};
+	    $room -= $w;
+	    $bs++;
+	    last if $room < 1;
+	}
+	next if $bs;
+
+	if (s/\A(\e*(?:${yield_re}(?!\cH))+)//) {
 	    my $s = $1;
 	    if ((my $w = vwidth($s)) <= $room) {
 		$folded .= $s;
@@ -404,7 +433,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.01
+Version 2.02
 
 =head1 SYNOPSIS
 
