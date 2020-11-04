@@ -148,6 +148,8 @@ sub pop_reset {
     @reset ? do { @color_stack = (); pop @reset } : '';
 }
 
+use List::Util qw(pairgrep);
+
 sub fold {
     my $obj = ref $_[0] ? $_[0] : do {
 	state $private = configure();
@@ -155,20 +157,9 @@ sub fold {
     shift;
 
     local $_ = shift // '';
-    my %opt = @_;
+    my %opt = ( %$obj, pairgrep { defined $b } @_ );
 
-    my $width     = $opt{width}     // $obj->{width};
-    my $boundary  = $opt{boundary}  // $obj->{boundary};
-    my $padding   = $opt{padding}   // $obj->{padding};
-    my $padchar   = $opt{padchar}   // $obj->{padchar};
-    my $ambiguous = $opt{ambiguous} // $obj->{ambiguous};
-    my $margin    = $opt{margin}    // $obj->{margin};
-    my $linebreak = $opt{linebreak} // $obj->{linebreak};
-    my $runin     = $opt{runin}     // $obj->{runin};
-    my $runout    = $opt{runout}    // $obj->{runout};
-    my $expand    = $opt{expand}    // $obj->{expand};
-    my $tabstop   = $opt{tabstop}   // $obj->{tabstop};
-
+    my $width = $opt{width} // die;
     if ($width < 0) {
 	$width = ~0 >> 1; # INT_MAX
     }
@@ -177,18 +168,18 @@ sub fold {
 	croak "invalid width";
     }
 
-    if ($width <= $margin) {
+    if ($width <= $opt{margin}) {
 	croak "invalid margin";
     }
-    $width -= $margin;
+    $width -= $opt{margin};
 
-    $Text::VisualWidth::PP::EastAsian = $ambiguous eq 'wide';
+    $Text::VisualWidth::PP::EastAsian = $opt{ambiguous} eq 'wide';
 
     my $folded = '';
     my $eol = '';
     my $room = $width;
     @color_stack = @reset = ();
-    my $yield_re = $expand ? qr/[^\e\n\f\r\t]/ : qr/[^\e\n\f\r]/;
+    my $yield_re = $opt{expand} ? qr/[^\e\n\f\r\t]/ : qr/[^\e\n\f\r]/;
 
   FOLD:
     while (length) {
@@ -231,8 +222,9 @@ sub fold {
 	}
 
 	# tab
-	if ($expand and s/\A(\t+)//) {
-	    my $space = $tabstop * length($1) - ($width - $room) % $tabstop;
+	if ($opt{expand} and s/\A(\t+)//) {
+	    my $space =
+		$opt{tabstop} * length($1) - ($width - $room) % $opt{tabstop};
 	    $_ = ' ' x $space . $_;
 	    next;
 	}
@@ -276,7 +268,7 @@ sub fold {
 	}
     }
 
-    if ($boundary eq 'word'
+    if ($opt{boundary} eq 'word'
 	and my($tail) = /^(${alphanum_re}+)/o
 	and $folded =~ m{
 		^
@@ -300,11 +292,11 @@ sub fold {
     ## RUN-OUT
     ##
     if ($_ ne ''
-	and $linebreak & LINEBREAK_RUNOUT and $runout > 0
+	and $opt{linebreak} & LINEBREAK_RUNOUT and $opt{runout} > 0
 	and $folded =~ m{ (?<color>  (?! ${reset_re}) ${color_re}*+ )
 			  (?<runout> $prohibition_re{end}+ ) \z }xp
 	and ${^PREMATCH} ne ''
-	and (my $w = vwidth $+{runout}) <= $runout) {
+	and (my $w = vwidth $+{runout}) <= $opt{runout}) {
 	$folded = ${^PREMATCH};
 	$_ = join '', ${^MATCH}, @reset, $_;
 	pop_reset() if $+{color};
@@ -313,14 +305,14 @@ sub fold {
 
     $folded .= pop_reset() if @reset;
 
-    $room += $margin;
+    $room += $opt{margin};
 
     ##
     ## RUN-IN
     ##
-    if ($linebreak & LINEBREAK_RUNIN and $runin > 0) {
+    if ($opt{linebreak} & LINEBREAK_RUNIN and $opt{runin} > 0) {
 	my @runin;
-	my $m = $runin;
+	my $m = $opt{runin};
 	while ($m > 0 and
 	       m{\A (?<color> ${color_re}*+)
 	            (?<runin> $prohibition_re{head})
@@ -342,8 +334,8 @@ sub fold {
 	$_ = join '', @color_stack, $_ if $_ ne '';
     }
 
-    if ($padding and $room > 0) {
-	$folded .= $padchar x $room;
+    if ($opt{padding} and $room > 0) {
+	$folded .= $opt{padchar} x $room;
     }
 
     ($folded . $eol, $_, $width - $room);
