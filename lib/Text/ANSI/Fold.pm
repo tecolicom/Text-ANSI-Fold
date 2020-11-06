@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.03";
+our $VERSION = "2.04";
 
 use Data::Dumper;
 use Carp;
@@ -93,6 +93,7 @@ sub new {
 	runout    => $DEFAULT_RUNOUT_WIDTH,
 	expand    => 0,
 	tabstop   => 8,
+	keep_el   => 1,
     }, $class;
 
     $obj->configure(@_) if @_;
@@ -205,7 +206,7 @@ sub fold {
 	}
 	# erase line (assume 0)
 	if (s/\A($erase_re)//) {
-	    $folded .= $1;
+	    $folded .= $1 if $obj->{keep_el};
 	    @bg_stack = @color_stack;
 	    next;
 	}
@@ -438,7 +439,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.03
+Version 2.04
 
 =head1 SYNOPSIS
 
@@ -604,8 +605,8 @@ width.
 =item B<padding> => I<bool>
 
 If B<padding> option is given with true value, margin space is filled
-up with space character.  Next code fills spaces if the given text is
-shorter than 80.
+up with space character.  Default is 0.  Next code fills spaces if the
+given text is shorter than 80.
 
     ansi_fold($text, 80, padding => 1);
 
@@ -625,6 +626,12 @@ given width.
 Tells how to treat Unicode East Asian ambiguous characters.  Default
 is "narrow" which means single column.  Set "wide" to tell the module
 to treat them as wide character.
+
+=item B<keep_el> => I<bool>
+
+Keep sole ANSI Erase Line sequence or not.  Default is 1.  If not
+true, individual Erase Line sequence is not kept in the result string.
+Erase Line right after RESET sequence is always kept.
 
 =item B<linebreak> => I<mode>
 

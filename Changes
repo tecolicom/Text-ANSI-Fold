@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.04 2020-11-06T04:20:15Z
+
+    - Add keep_el parameter to control keep Erase Line or not.
+
 2.03 2020-11-06T03:29:06Z
 
     - Remember color at erase line sequence, and apply to padding string.
