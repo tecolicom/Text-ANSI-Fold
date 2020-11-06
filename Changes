@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.03 2020-11-06T03:29:06Z
+
+    - Remember color at erase line sequence, and apply to padding string.
+
 2.02 2020-11-04T05:31:35Z
 
     - Support backspaces.

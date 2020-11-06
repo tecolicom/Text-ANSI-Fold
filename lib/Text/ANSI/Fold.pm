@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.02";
+our $VERSION = "2.03";
 
 use Data::Dumper;
 use Carp;
@@ -29,8 +29,9 @@ sub ansi_fold {
 ######################################################################
 
 my $alphanum_re = qr{ [_\d\p{Latin}] }x;
-my $reset_re    = qr{ \e \[ [0;]* m (?: \e \[ [0;]* [mK])* }x;
-my $color_re    = qr{ \e \[ [\d;]* [mK] }x;
+my $reset_re    = qr{ \e \[ [0;]* m }x;
+my $color_re    = qr{ \e \[ [\d;]* m }x;
+my $erase_re    = qr{ \e \[ [\d;]* K }x;
 my $control_re  = qr{
     # see ECMA-48 8.3.89 OSC - OPERATING SYSTEM COMMAND
     \e \]			# osc
@@ -142,6 +143,7 @@ sub configure {
 }
 
 my @color_stack;
+my @bg_stack;
 my @reset;
 sub put_reset { @reset = shift };
 sub pop_reset {
@@ -178,7 +180,7 @@ sub fold {
     my $folded = '';
     my $eol = '';
     my $room = $width;
-    @color_stack = @reset = ();
+    @bg_stack = @color_stack = @reset = ();
     my $yield_re = $opt{expand} ? qr/[^\e\n\f\r\t]/ : qr/[^\e\n\f\r]/;
 
   FOLD:
@@ -189,7 +191,7 @@ sub fold {
 	    $eol = $1;
 	    last;
 	}
-	# formfeed
+	# formfeed / carriage return
 	if (s/\A([\f\r]+)//) {
 	    last if length == 0;
 	    $folded .= $1;
@@ -201,9 +203,16 @@ sub fold {
 	    $folded .= $1;
 	    next;
 	}
+	# erase line (assume 0)
+	if (s/\A($erase_re)//) {
+	    $folded .= $1;
+	    @bg_stack = @color_stack;
+	    next;
+	}
 	# reset
-	if (s/\A($reset_re)//) {
+	if (s/\A($reset_re+($erase_re*))//) {
 	    put_reset($1);
+	    @bg_stack = () if $2;
 	    next;
 	}
 
@@ -335,7 +344,11 @@ sub fold {
     }
 
     if ($opt{padding} and $room > 0) {
-	$folded .= $opt{padchar} x $room;
+	my $padding = $opt{padchar} x $room;
+	if (@bg_stack) {
+	    $padding = join '', @bg_stack, $padding, SGR_RESET;
+	}
+	$folded .= $padding;
     }
 
     ($folded . $eol, $_, $width - $room);
@@ -425,7 +438,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.02
+Version 2.03
 
 =head1 SYNOPSIS
 
@@ -595,6 +608,10 @@ up with space character.  Next code fills spaces if the given text is
 shorter than 80.
 
     ansi_fold($text, 80, padding => 1);
+
+If an ANSI B<Erase Line> sequence is found in the string, color status
+at the position is remembered, and padding string is produced in that
+color.
 
 =item B<padchar> => I<char>
 

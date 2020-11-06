@@ -4,7 +4,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 # VERSION
 
-Version 2.02
+Version 2.03
 
 # SYNOPSIS
 
@@ -172,6 +172,10 @@ function as well as **new** and **configure** method.
     shorter than 80.
 
         ansi_fold($text, 80, padding => 1);
+
+    If an ANSI **Erase Line** sequence is found in the string, color status
+    at the position is remembered, and padding string is produced in that
+    color.
 
 - **padchar** => _char_
 
