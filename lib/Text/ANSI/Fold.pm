@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.04";
+our $VERSION = "2.05";
 
 use Data::Dumper;
 use Carp;
@@ -282,7 +282,7 @@ sub fold {
 	and my($tail) = /^(${alphanum_re}+)/o
 	and $folded =~ m{
 		^
-		( (?: [^\e]* ${color_re} ) *+ )
+		( (?: [^\e]* (?:${color_re}|${erase_re}) ) *+ )
 		( .*? )
 		( ${alphanum_re}+ )
 		\z
@@ -439,7 +439,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.04
+Version 2.05
 
 =head1 SYNOPSIS
 

@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.05 2020-11-11T08:24:22Z
+
+    - Fix word boundary handling bug introduced at 2.03.
+
 2.04 2020-11-06T04:20:15Z
 
     - Add keep_el parameter to control keep Erase Line or not.
