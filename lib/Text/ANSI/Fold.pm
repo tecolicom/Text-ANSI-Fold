@@ -289,7 +289,7 @@ sub fold {
     }
 
     if ($opt{boundary} eq 'word'
-	and my($tail) = /^(${alphanum_re}+)/o
+	and my $tail = (/\A(${alphanum_re}+)/)[0]
 	and $folded =~ m{
 		^
 		( (?: [^\e]* ${csi_re}++ ) *+ )
@@ -612,6 +612,9 @@ this case, text is folded on word boundary.  This occurs only when
 enough space will be provided to hold the word on next call with same
 width.
 
+If the color of text is altered within a word, that position is also
+treated as an boundary.
+
 =item B<padding> => I<bool>
 
 If B<padding> option is given with true value, margin space is filled
@@ -739,10 +742,10 @@ are not supported by these modules.
 
 ANSI escape code definition.
 
-=item L<https://www.w3.org/TR/2012/NOTE-jlreq-20120403/>
+=item L<https://www.w3.org/TR/jlreq/>
 
 Requirements for Japanese Text Layout,
-W3C Working Group Note 3 April 2012
+W3C Working Group Note 11 August 2020
 
 =item L<http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-048.pdf>
 
@@ -752,7 +755,7 @@ Control Functions for Coded Character Sets
 
 =head1 LICENSE
 
-Copyright (C) 2018- Kazumasa Utashiro.
+Copyright 2018- Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
