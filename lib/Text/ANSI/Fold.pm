@@ -500,8 +500,11 @@ the rest.
 
 Additional third result is the visual width of folded text.  You may
 want to know how many columns returned string takes for further
-processing.  If the width parameter is negative, it returns string
-untouched and the visual width of it.
+processing.
+
+Negative width value is taken as unlimited.  So the string is never
+folded, but you can use this to expand tabs and to get visual string
+width.
 
 This function returns at least one character in any situation.  If you
 provide Asian wide string and just one column as width, it trims off
