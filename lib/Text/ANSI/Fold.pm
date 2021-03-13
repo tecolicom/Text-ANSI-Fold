@@ -4,9 +4,10 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.08";
+our $VERSION = "2.09";
 
 use Data::Dumper;
+$Data::Dumper::Sortkeys = 1;
 use Carp;
 use Text::VisualWidth::PP 'vwidth';
 
@@ -85,6 +86,13 @@ our $DEFAULT_LINEBREAK = LINEBREAK_NONE;
 our $DEFAULT_RUNIN_WIDTH  = 2;
 our $DEFAULT_RUNOUT_WIDTH = 2;
 
+use charnames ':loose';
+my %tab_style = (
+    dot    => [ '.', '.' ],
+    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}", ' ' ],
+    shade  => [ "\N{MEDIUM SHADE}", "\N{LIGHT SHADE}" ],
+    );
+
 sub new {
     my $class = shift;
     my $obj = bless {
@@ -102,6 +110,7 @@ sub new {
 	tabstop   => 8,
 	tabhead   => ' ',
 	tabspace  => ' ',
+	tabstyle  => undef,
 	discard   => {},
     }, $class;
 
@@ -148,6 +157,10 @@ sub configure {
 	my($a, $b) = splice @_, 0, 2;
 	croak "$a: invalid parameter\n" if not exists $obj->{$a};
 	$obj->{$a} = $b;
+    }
+    if ($obj->{tabstyle} and
+	my $style = $tab_style{$obj->{tabstyle}}) {
+	@{$obj}{qw(tabhead tabspace)} = @$style;
     }
     if (ref $obj->{discard} eq 'ARRAY') {
 	$obj->{discard} = { map { uc $_ => 1 } @{$obj->{discard}} };
@@ -450,7 +463,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.08
+Version 2.09
 
 =head1 SYNOPSIS
 
@@ -695,6 +708,16 @@ Default tabstop is 8 and can be set by B<tabstop> option.
 Tab character is converted to B<tabhead> and following B<tabspace>
 characters.  Both are white space by default.
 
+=item B<tabstyle> => I<style>
+
+Set tab expansion style.  This parameter set both B<tabhead> and
+B<tabspace> at once according to the given style name.  Currently
+these names are available.
+
+    dot    => [ '.', '.' ],
+    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}", ' ' ],
+    shade  => [ "\N{MEDIUM SHADE}", "\N{LIGHT SHADE}" ],
+
 =back
 
 =head1 EXAMPLE
@@ -725,6 +748,12 @@ characters with prohibited character handling.
 =head1 SEE ALSO
 
 =over 7
+
+=item L<Text::ANSI::Fold>
+
+=item L<https://github.com/kaz-utashiro/Text-ANSI-Fold>
+
+Distribution and repository.
 
 =item L<App::ansifold>
 
@@ -765,22 +794,16 @@ Control Functions for Coded Character Sets
 
 =back
 
+=head1 AUTHOR
+
+Kazumasa Utashiro
+
 =head1 LICENSE
 
 Copyright 2018- Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
-
-=head1 AUTHOR
-
-=over
-
-=item Kazumasa Utashiro
-
-=item L<https://github.com/kaz-utashiro/Text-ANSI-Fold>
-
-=back
 
 =cut
 
