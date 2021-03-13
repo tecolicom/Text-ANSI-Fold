@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.0901";
+our $VERSION = "2.0902";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -156,15 +156,12 @@ sub configure {
 	my($a, $b) = splice @_, 0, 2;
 
 	if ($a eq 'tabstyle') {
-	    if (my $style = $tab_style{$b}) {
-		push @_, tabhead => $style->[0], tabspace => $style->[1];
-	    } else {
-		croak "$style: invalid tabstyle\n";
-	    }
+	    my $style = $tab_style{$b} or croak "$b: invalid tabstyle";
+	    push @_, tabhead => $style->[0], tabspace => $style->[1];
 	    next;
 	}
 
-	croak "$a: invalid parameter\n" if not exists $obj->{$a};
+	croak "$a: invalid parameter" if not exists $obj->{$a};
 	$obj->{$a} = $b;
     }
     if (ref $obj->{discard} eq 'ARRAY') {
@@ -413,7 +410,7 @@ sub simple_fold {
 
 sub text {
     my $obj = shift;
-    croak "Invalid argument." unless @_;
+    croak "Invalid argument" unless @_;
     $obj->{text} = shift;
     $obj;
 }
@@ -468,7 +465,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.0901
+Version 2.0902
 
 =head1 SYNOPSIS
 

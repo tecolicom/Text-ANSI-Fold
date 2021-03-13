@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.0902 2021-03-13T07:11:48Z
+
+    - Fix error message bugs.
+
 2.0901 2021-03-13T06:52:47Z
 
     - Make 'tabstyle' option overridable by following options.
