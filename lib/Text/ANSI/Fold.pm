@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.09";
+our $VERSION = "2.0901";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -110,7 +110,6 @@ sub new {
 	tabstop   => 8,
 	tabhead   => ' ',
 	tabspace  => ' ',
-	tabstyle  => undef,
 	discard   => {},
     }, $class;
 
@@ -155,12 +154,18 @@ sub configure {
     croak "invalid parameter" if @_ % 2;
     while (@_ >= 2) {
 	my($a, $b) = splice @_, 0, 2;
+
+	if ($a eq 'tabstyle') {
+	    if (my $style = $tab_style{$b}) {
+		push @_, tabhead => $style->[0], tabspace => $style->[1];
+	    } else {
+		croak "$style: invalid tabstyle\n";
+	    }
+	    next;
+	}
+
 	croak "$a: invalid parameter\n" if not exists $obj->{$a};
 	$obj->{$a} = $b;
-    }
-    if ($obj->{tabstyle} and
-	my $style = $tab_style{$obj->{tabstyle}}) {
-	@{$obj}{qw(tabhead tabspace)} = @$style;
     }
     if (ref $obj->{discard} eq 'ARRAY') {
 	$obj->{discard} = { map { uc $_ => 1 } @{$obj->{discard}} };
@@ -463,7 +468,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.09
+Version 2.0901
 
 =head1 SYNOPSIS
 

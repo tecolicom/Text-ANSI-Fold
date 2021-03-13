@@ -4,7 +4,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 # VERSION
 
-Version 2.09
+Version 2.0901
 
 # SYNOPSIS
 
