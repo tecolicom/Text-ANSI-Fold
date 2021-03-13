@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.0902";
+our $VERSION = "2.0903";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -157,7 +157,7 @@ sub configure {
 
 	if ($a eq 'tabstyle') {
 	    my $style = $tab_style{$b} or croak "$b: invalid tabstyle";
-	    push @_, tabhead => $style->[0], tabspace => $style->[1];
+	    unshift @_, tabhead => $style->[0], tabspace => $style->[1];
 	    next;
 	}
 
@@ -465,7 +465,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.0902
+Version 2.0903
 
 =head1 SYNOPSIS
 

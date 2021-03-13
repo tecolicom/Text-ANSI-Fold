@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.0903 2021-03-13T14:12:27Z
+
+    - Fix option processing order bug. (sigh...)
+
 2.0902 2021-03-13T07:11:48Z
 
     - Fix error message bugs.
