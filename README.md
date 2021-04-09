@@ -1,3 +1,4 @@
+[![Actions Status](https://github.com/kaz-utashiro/Text-ANSI-Fold/workflows/test/badge.svg)](https://github.com/kaz-utashiro/Text-ANSI-Fold/actions) [![MetaCPAN Release](https://badge.fury.io/pl/Text-ANSI-Fold.svg)](https://metacpan.org/release/Text-ANSI-Fold)
 # NAME
 
 Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and Asian wide characters with prohibition character handling.
