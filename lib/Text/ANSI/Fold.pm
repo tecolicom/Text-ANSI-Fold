@@ -86,11 +86,23 @@ our $DEFAULT_LINEBREAK = LINEBREAK_NONE;
 our $DEFAULT_RUNIN_WIDTH  = 2;
 our $DEFAULT_RUNOUT_WIDTH = 2;
 
-use charnames ':loose';
+use charnames ':full';
 my %tab_style = (
+    space  => [ ' ', ' ' ],
     dot    => [ '.', '.' ],
-    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}", ' ' ],
-    shade  => [ "\N{MEDIUM SHADE}", "\N{LIGHT SHADE}" ],
+    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
+		"\N{SYMBOL FOR SPACE}" ],
+    shade  => [ "\N{MEDIUM SHADE}",
+		"\N{LIGHT SHADE}" ],
+    block  => [ "\N{LOWER ONE QUARTER BLOCK}",
+		"\N{LOWER ONE EIGHTH BLOCK}" ],
+    bar    => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+		"\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
+    dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+		"\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
+    arrow  => [ "\N{RIGHTWARDS ARROW FROM BAR}",
+		"\N{RIGHTWARDS ARROW}" ],
+
     );
 
 sub new {
@@ -156,8 +168,15 @@ sub configure {
 	my($a, $b) = splice @_, 0, 2;
 
 	if ($a eq 'tabstyle') {
-	    my $style = $tab_style{$b} or croak "$b: invalid tabstyle";
-	    unshift @_, tabhead => $style->[0], tabspace => $style->[1];
+	    my($h, $s) = $b =~ /([-\w]+)/g or croak "$b: invalid tabstyle";
+	    $s ||= $h;
+	    my %style = (
+		h => ($tab_style{$h} or croak "$h: invalid tabstyle"),
+		s => ($tab_style{$s} or croak "$s: invalid tabstyle"),
+		);
+	    unshift @_,
+		tabhead  => $style{h}->[0],
+		tabspace => $style{s}->[1];
 	    next;
 	}
 
@@ -538,6 +557,9 @@ using default width with additional parameter:
 
     ($folded, $remain) = ansi_fold($text, undef, padding => 1);
 
+Some other easy-to-use interfaces are provided by sister module
+L<Text::ANSI::Fold::Util>.
+
 =head1 OBJECT INTERFACE
 
 You can create an object to hold parameters, which is effective during
@@ -716,9 +738,21 @@ Set tab expansion style.  This parameter set both B<tabhead> and
 B<tabspace> at once according to the given style name.  Currently
 these names are available.
 
+    space  => [ ' ', ' ' ],
     dot    => [ '.', '.' ],
-    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}", ' ' ],
-    shade  => [ "\N{MEDIUM SHADE}", "\N{LIGHT SHADE}" ],
+    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
+                "\N{SYMBOL FOR SPACE}" ],
+    shade  => [ "\N{MEDIUM SHADE}",
+                "\N{LIGHT SHADE}" ],
+    block  => [ "\N{LOWER ONE QUARTER BLOCK}",
+                "\N{LOWER ONE EIGHTH BLOCK}" ],
+    bar    => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+                "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
+    dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+                "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
+
+If two style names are combined, like C<symbol,space>, first name is
+used for tabhead, and second one for tabspace.
 
 =back
 

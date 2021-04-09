@@ -78,6 +78,9 @@ using default width with additional parameter:
 
     ($folded, $remain) = ansi_fold($text, undef, padding => 1);
 
+Some other easy-to-use interfaces are provided by sister module
+[Text::ANSI::Fold::Util](https://metacpan.org/pod/Text::ANSI::Fold::Util).
+
 # OBJECT INTERFACE
 
 You can create an object to hold parameters, which is effective during
@@ -249,9 +252,21 @@ function as well as **new** and **configure** method.
     **tabspace** at once according to the given style name.  Currently
     these names are available.
 
+        space  => [ ' ', ' ' ],
         dot    => [ '.', '.' ],
-        symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}", ' ' ],
-        shade  => [ "\N{MEDIUM SHADE}", "\N{LIGHT SHADE}" ],
+        symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
+                    "\N{SYMBOL FOR SPACE}" ],
+        shade  => [ "\N{MEDIUM SHADE}",
+                    "\N{LIGHT SHADE}" ],
+        block  => [ "\N{LOWER ONE QUARTER BLOCK}",
+                    "\N{LOWER ONE EIGHTH BLOCK}" ],
+        bar    => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+                    "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
+        dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+                    "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
+
+    If two style names are combined, like `symbol,space`, first name is
+    used for tabhead, and second one for tabspace.
 
 # EXAMPLE
 
