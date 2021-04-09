@@ -9,6 +9,7 @@ our $VERSION = "2.0903";
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
 use Carp;
+use List::Util qw(pairmap pairgrep);
 use Text::VisualWidth::PP 'vwidth';
 
 ######################################################################
@@ -87,7 +88,10 @@ our $DEFAULT_RUNIN_WIDTH  = 2;
 our $DEFAULT_RUNOUT_WIDTH = 2;
 
 use charnames ':full';
-my %tab_style = (
+our %TABSTYLE = (
+    pairmap {
+	( $a =~ s/_/-/gr, ref $b ? $b : [ $b, $b ] );
+    }
     space  => [ ' ', ' ' ],
     dot    => [ '.', '.' ],
     symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
@@ -100,8 +104,19 @@ my %tab_style = (
 		"\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
     dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
 		"\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
-    arrow  => [ "\N{RIGHTWARDS ARROW FROM BAR}",
-		"\N{RIGHTWARDS ARROW}" ],
+
+    arrow        => "\N{RIGHTWARDS ARROW}",
+    double_arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
+    triple_arrow => "\N{RIGHTWARDS TRIPLE ARROW}",
+    white_arrow  => "\N{RIGHTWARDS WHITE ARROW}",
+    wave_arrow   => "\N{RIGHTWARDS WAVE ARROW}",
+    circle_arrow => "\N{CIRCLED HEAVY WHITE RIGHTWARDS ARROW}",
+    curved_arrow => "\N{HEAVY BLACK CURVED DOWNWARDS AND RIGHTWARDS ARROW}",
+    shadow_arrow => "\N{HEAVY UPPER RIGHT-SHADOWED WHITE RIGHTWARDS ARROW}",
+    squat_arrow  => "\N{SQUAT BLACK RIGHTWARDS ARROW}",
+    squiggle     => "\N{RIGHTWARDS SQUIGGLE ARROW}",
+    harpoon      => "\N{RIGHTWARDS HARPOON WITH BARB UPWARDS}",
+    cuneiform    => "\N{CUNEIFORM SIGN TAB}",
 
     );
 
@@ -168,11 +183,12 @@ sub configure {
 	my($a, $b) = splice @_, 0, 2;
 
 	if ($a eq 'tabstyle') {
+	    $b // next;
 	    my($h, $s) = $b =~ /([-\w]+)/g or croak "$b: invalid tabstyle";
 	    $s ||= $h;
 	    my %style = (
-		h => ($tab_style{$h} or croak "$h: invalid tabstyle"),
-		s => ($tab_style{$s} or croak "$s: invalid tabstyle"),
+		h => ($TABSTYLE{$h} or croak "$h: invalid tabstyle"),
+		s => ($TABSTYLE{$s} or croak "$s: invalid tabstyle"),
 		);
 	    unshift @_,
 		tabhead  => $style{h}->[0],
@@ -196,8 +212,6 @@ sub put_reset { @reset = shift };
 sub pop_reset {
     @reset ? do { @color_stack = (); pop @reset } : '';
 }
-
-use List::Util qw(pairgrep);
 
 sub fold {
     my $obj = ref $_[0] ? $_[0] : do {
@@ -735,8 +749,13 @@ characters.  Both are white space by default.
 =item B<tabstyle> => I<style>
 
 Set tab expansion style.  This parameter set both B<tabhead> and
-B<tabspace> at once according to the given style name.  Currently
-these names are available.
+B<tabspace> at once according to the given style name.  Each style has
+two values for tabhead and tabspace.
+
+If two style names are combined, like C<symbol,space>, use
+C<symbols>'s tabhead and C<space>'s tabspace.
+
+Currently these names are available.
 
     space  => [ ' ', ' ' ],
     dot    => [ '.', '.' ],
@@ -751,8 +770,22 @@ these names are available.
     dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
                 "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
 
-If two style names are combined, like C<symbol,space>, first name is
-used for tabhead, and second one for tabspace.
+Below are styles providing same character for both tabhead and
+tabspace.  Convert underscore (C<_>) to dash (C<->) like
+C<double-arrow>.
+
+    arrow        => "\N{RIGHTWARDS ARROW}",
+    double_arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
+    triple_arrow => "\N{RIGHTWARDS TRIPLE ARROW}",
+    white_arrow  => "\N{RIGHTWARDS WHITE ARROW}",
+    wave_arrow   => "\N{RIGHTWARDS WAVE ARROW}",
+    circle_arrow => "\N{CIRCLED HEAVY WHITE RIGHTWARDS ARROW}",
+    curved_arrow => "\N{HEAVY BLACK CURVED DOWNWARDS AND RIGHTWARDS ARROW}",
+    shadow_arrow => "\N{HEAVY UPPER RIGHT-SHADOWED WHITE RIGHTWARDS ARROW}",
+    squat_arrow  => "\N{SQUAT BLACK RIGHTWARDS ARROW}",
+    squiggle     => "\N{RIGHTWARDS SQUIGGLE ARROW}",
+    harpoon      => "\N{RIGHTWARDS HARPOON WITH BARB UPWARDS}",
+    cuneiform    => "\N{CUNEIFORM SIGN TAB}",
 
 =back
 
