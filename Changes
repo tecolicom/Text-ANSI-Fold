@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.10 2021-04-09T10:12:10Z
+
+    - Add some new tab styles.
+    - Accept multiple styles.
+
 2.0903 2021-03-13T14:12:27Z
 
     - Fix option processing order bug. (sigh...)
