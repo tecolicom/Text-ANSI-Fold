@@ -31,6 +31,7 @@ sub ansi_fold {
 ######################################################################
 
 my $alphanum_re = qr{ [_\d\p{Latin}] }x;
+my $nonspace_re = qr{ \p{IsPrintableLatin} }x;
 my $reset_re    = qr{ \e \[ [0;]* m }x;
 my $color_re    = qr{ \e \[ [\d;]* m }x;
 my $erase_re    = qr{ \e \[ [\d;]* K }x;
@@ -49,6 +50,14 @@ my $osc_re      = qr{
 }x;
 
 use constant SGR_RESET => "\e[m";
+
+sub IsPrintableLatin {
+    return <<"END";
++utf8::ASCII
++utf8::Latin
+-utf8::White_Space
+END
+}
 
 sub IsWideSpacing {
     return <<"END";
@@ -236,6 +245,10 @@ sub fold {
     }
     $width -= $opt{margin};
 
+    my $word_char_re =
+	    { word => $alphanum_re, space => $nonspace_re }
+	    ->{$opt{boundary} // ''};
+
     $Text::VisualWidth::PP::EastAsian = $opt{ambiguous} eq 'wide';
 
     my $folded = '';
@@ -337,15 +350,15 @@ sub fold {
 	}
     }
 
-    if ($opt{boundary} eq 'word'
-	and my $tail = (/\A(${alphanum_re}+)/)[0]
+    if ($word_char_re
+	and my $tail = (/\A(${word_char_re}+)/)[0]
 	and $folded =~ m{
 		^
 		( (?: [^\e]* ${csi_re}++ ) *+ )
 		( .*? )
-		( ${alphanum_re}+ )
+		( ${word_char_re}+ )
 		\z
-	}xo
+	}x
 	) {
 	## Break line before word only when enough space will be
 	## provided for the word in the next turn.
@@ -660,15 +673,18 @@ Specify folding width.  Negative value means all the rest.
 Array reference can be specified but works only with B<chops> method,
 and retunrs empty string for zero width.
 
-=item B<boundary> => "word"
+=item B<boundary> => I<word> or I<space>
 
-B<boundary> option currently takes only "word" as a valid value.  In
-this case, text is folded on word boundary.  This occurs only when
-enough space will be provided to hold the word on next call with same
-width.
+Option B<boundary> takes I<word> and I<space> as a valid value.  These
+prohibit to fold a line in the middle of ASCII/Latin sequence.  Value
+I<word> means a sequence of alpha-numeric characters, and I<space>
+means simply non-space printables.
+
+This operation takes place only when enough space will be provided to
+hold the word on next call with same width.
 
 If the color of text is altered within a word, that position is also
-treated as an boundary.
+taken as an boundary.
 
 =item B<padding> => I<bool>
 

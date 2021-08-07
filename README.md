@@ -165,15 +165,18 @@ function as well as **new** and **configure** method.
     Array reference can be specified but works only with **chops** method,
     and retunrs empty string for zero width.
 
-- **boundary** => "word"
+- **boundary** => _word_ or _space_
 
-    **boundary** option currently takes only "word" as a valid value.  In
-    this case, text is folded on word boundary.  This occurs only when
-    enough space will be provided to hold the word on next call with same
-    width.
+    Option **boundary** takes _word_ and _space_ as a valid value.  These
+    prohibit to fold a line in the middle of ASCII/Latin sequence.  Value
+    _word_ means a sequence of alpha-numeric characters, and _space_
+    means simply non-space printables.
+
+    This operation takes place only when enough space will be provided to
+    hold the word on next call with same width.
 
     If the color of text is altered within a word, that position is also
-    treated as an boundary.
+    taken as an boundary.
 
 - **padding** => _bool_
 
