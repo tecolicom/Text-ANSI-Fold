@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.11 2021-08-07T03:24:46Z
+
+    - Make boundary parameter to take 'space' value.
+
 2.10 2021-04-09T10:12:10Z
 
     - Add some new tab styles.
