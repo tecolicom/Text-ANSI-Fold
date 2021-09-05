@@ -103,29 +103,29 @@ our %TABSTYLE = (
     }
     space  => [ ' ', ' ' ],
     dot    => [ '.', '.' ],
-    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
-		"\N{SYMBOL FOR SPACE}" ],
-    shade  => [ "\N{MEDIUM SHADE}",
-		"\N{LIGHT SHADE}" ],
-    block  => [ "\N{LOWER ONE QUARTER BLOCK}",
-		"\N{LOWER ONE EIGHTH BLOCK}" ],
-    bar    => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
-		"\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
-    dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
-		"\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
+    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",			    # ␉
+		"\N{SYMBOL FOR SPACE}" ],				    # ␠
+    shade  => [ "\N{MEDIUM SHADE}",					    # ▒
+		"\N{LIGHT SHADE}" ],					    # ░
+    block  => [ "\N{LOWER ONE QUARTER BLOCK}",				    # ▂
+		"\N{LOWER ONE EIGHTH BLOCK}" ],				    # ▁
+    bar    => [ "\N{BOX DRAWINGS HEAVY RIGHT}",				    # ╺
+		"\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],			    # ─
+    dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",				    # ╺
+		"\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],	    # ╌
 
-    arrow        => "\N{RIGHTWARDS ARROW}",
-    double_arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
-    triple_arrow => "\N{RIGHTWARDS TRIPLE ARROW}",
-    white_arrow  => "\N{RIGHTWARDS WHITE ARROW}",
-    wave_arrow   => "\N{RIGHTWARDS WAVE ARROW}",
-    circle_arrow => "\N{CIRCLED HEAVY WHITE RIGHTWARDS ARROW}",
-    curved_arrow => "\N{HEAVY BLACK CURVED DOWNWARDS AND RIGHTWARDS ARROW}",
-    shadow_arrow => "\N{HEAVY UPPER RIGHT-SHADOWED WHITE RIGHTWARDS ARROW}",
-    squat_arrow  => "\N{SQUAT BLACK RIGHTWARDS ARROW}",
-    squiggle     => "\N{RIGHTWARDS SQUIGGLE ARROW}",
-    harpoon      => "\N{RIGHTWARDS HARPOON WITH BARB UPWARDS}",
-    cuneiform    => "\N{CUNEIFORM SIGN TAB}",
+    arrow        => "\N{RIGHTWARDS ARROW}",				    # →
+    double_arrow => "\N{RIGHTWARDS DOUBLE ARROW}",			    # ⇒
+    triple_arrow => "\N{RIGHTWARDS TRIPLE ARROW}",			    # ⇛
+    white_arrow  => "\N{RIGHTWARDS WHITE ARROW}",			    # ⇨
+    wave_arrow   => "\N{RIGHTWARDS WAVE ARROW}",			    # ↝
+    circle_arrow => "\N{CIRCLED HEAVY WHITE RIGHTWARDS ARROW}",		    # ➲
+    curved_arrow => "\N{HEAVY BLACK CURVED DOWNWARDS AND RIGHTWARDS ARROW}",# ➥
+    shadow_arrow => "\N{HEAVY UPPER RIGHT-SHADOWED WHITE RIGHTWARDS ARROW}",# ➮
+    squat_arrow  => "\N{SQUAT BLACK RIGHTWARDS ARROW}",			    # ➧
+    squiggle     => "\N{RIGHTWARDS SQUIGGLE ARROW}",			    # ⇝
+    harpoon      => "\N{RIGHTWARDS HARPOON WITH BARB UPWARDS}",		    # ⇀
+    cuneiform    => "\N{CUNEIFORM SIGN TAB}",				    # 𒋰
 
     );
 
@@ -787,18 +787,17 @@ Currently these names are available.
                 "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
 
 Below are styles providing same character for both tabhead and
-tabspace.  Convert underscore (C<_>) to dash (C<->) like
-C<double-arrow>.
+tabspace.
 
     arrow        => "\N{RIGHTWARDS ARROW}",
-    double_arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
-    triple_arrow => "\N{RIGHTWARDS TRIPLE ARROW}",
-    white_arrow  => "\N{RIGHTWARDS WHITE ARROW}",
-    wave_arrow   => "\N{RIGHTWARDS WAVE ARROW}",
-    circle_arrow => "\N{CIRCLED HEAVY WHITE RIGHTWARDS ARROW}",
-    curved_arrow => "\N{HEAVY BLACK CURVED DOWNWARDS AND RIGHTWARDS ARROW}",
-    shadow_arrow => "\N{HEAVY UPPER RIGHT-SHADOWED WHITE RIGHTWARDS ARROW}",
-    squat_arrow  => "\N{SQUAT BLACK RIGHTWARDS ARROW}",
+    double-arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
+    triple-arrow => "\N{RIGHTWARDS TRIPLE ARROW}",
+    white-arrow  => "\N{RIGHTWARDS WHITE ARROW}",
+    wave-arrow   => "\N{RIGHTWARDS WAVE ARROW}",
+    circle-arrow => "\N{CIRCLED HEAVY WHITE RIGHTWARDS ARROW}",
+    curved-arrow => "\N{HEAVY BLACK CURVED DOWNWARDS AND RIGHTWARDS ARROW}",
+    shadow-arrow => "\N{HEAVY UPPER RIGHT-SHADOWED WHITE RIGHTWARDS ARROW}",
+    squat-arrow  => "\N{SQUAT BLACK RIGHTWARDS ARROW}",
     squiggle     => "\N{RIGHTWARDS SQUIGGLE ARROW}",
     harpoon      => "\N{RIGHTWARDS HARPOON WITH BARB UPWARDS}",
     cuneiform    => "\N{CUNEIFORM SIGN TAB}",

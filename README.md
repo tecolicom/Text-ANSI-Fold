@@ -274,18 +274,17 @@ function as well as **new** and **configure** method.
                     "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
 
     Below are styles providing same character for both tabhead and
-    tabspace.  Convert underscore (`_`) to dash (`-`) like
-    `double-arrow`.
+    tabspace.
 
         arrow        => "\N{RIGHTWARDS ARROW}",
-        double_arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
-        triple_arrow => "\N{RIGHTWARDS TRIPLE ARROW}",
-        white_arrow  => "\N{RIGHTWARDS WHITE ARROW}",
-        wave_arrow   => "\N{RIGHTWARDS WAVE ARROW}",
-        circle_arrow => "\N{CIRCLED HEAVY WHITE RIGHTWARDS ARROW}",
-        curved_arrow => "\N{HEAVY BLACK CURVED DOWNWARDS AND RIGHTWARDS ARROW}",
-        shadow_arrow => "\N{HEAVY UPPER RIGHT-SHADOWED WHITE RIGHTWARDS ARROW}",
-        squat_arrow  => "\N{SQUAT BLACK RIGHTWARDS ARROW}",
+        double-arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
+        triple-arrow => "\N{RIGHTWARDS TRIPLE ARROW}",
+        white-arrow  => "\N{RIGHTWARDS WHITE ARROW}",
+        wave-arrow   => "\N{RIGHTWARDS WAVE ARROW}",
+        circle-arrow => "\N{CIRCLED HEAVY WHITE RIGHTWARDS ARROW}",
+        curved-arrow => "\N{HEAVY BLACK CURVED DOWNWARDS AND RIGHTWARDS ARROW}",
+        shadow-arrow => "\N{HEAVY UPPER RIGHT-SHADOWED WHITE RIGHTWARDS ARROW}",
+        squat-arrow  => "\N{SQUAT BLACK RIGHTWARDS ARROW}",
         squiggle     => "\N{RIGHTWARDS SQUIGGLE ARROW}",
         harpoon      => "\N{RIGHTWARDS HARPOON WITH BARB UPWARDS}",
         cuneiform    => "\N{CUNEIFORM SIGN TAB}",
@@ -355,9 +354,9 @@ characters with prohibited character handling.
     Requirements for Japanese Text Layout,
     W3C Working Group Note 11 August 2020
 
-- [http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-048.pdf](http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-048.pdf)
+- [ECMA-48](https://www.ecma-international.org/wp-content/uploads/ECMA-48_5th_edition_june_1991.pdf)
 
-    Control Functions for Coded Character Sets
+    ECMA-48: Control Functions for Coded Character Sets
 
 # AUTHOR
 
