@@ -873,9 +873,9 @@ ANSI escape code definition.
 Requirements for Japanese Text Layout,
 W3C Working Group Note 11 August 2020
 
-=item L<http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-048.pdf>
+=item L<ECMA-48|https://www.ecma-international.org/wp-content/uploads/ECMA-48_5th_edition_june_1991.pdf>
 
-Control Functions for Coded Character Sets
+ECMA-48: Control Functions for Coded Character Sets
 
 =back
 
