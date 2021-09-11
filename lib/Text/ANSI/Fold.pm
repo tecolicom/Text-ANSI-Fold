@@ -847,6 +847,11 @@ Command line utility using L<Text::ANSI::Fold>.
 
 Collection of utilities using L<Text::ANSI::Fold> module.
 
+=item L<Text::ANSI::Tabs>
+
+L<Text::Tabs> compatible tab expand/unexpand module using
+L<Text::ANSI::Fold> as a backend processor.
+
 =item L<App::sdif>
 
 L<Text::ANSI::Fold> was originally implemented in B<sdif> command for

@@ -329,6 +329,11 @@ characters with prohibited character handling.
 
     Collection of utilities using [Text::ANSI::Fold](https://metacpan.org/pod/Text::ANSI::Fold) module.
 
+- [Text::ANSI::Tabs](https://metacpan.org/pod/Text::ANSI::Tabs)
+
+    [Text::Tabs](https://metacpan.org/pod/Text::Tabs) compatible tab expand/unexpand module using
+    [Text::ANSI::Fold](https://metacpan.org/pod/Text::ANSI::Fold) as a backend processor.
+
 - [App::sdif](https://metacpan.org/pod/App::sdif)
 
     [Text::ANSI::Fold](https://metacpan.org/pod/Text::ANSI::Fold) was originally implemented in **sdif** command for
