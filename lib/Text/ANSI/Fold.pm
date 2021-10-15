@@ -96,9 +96,11 @@ our $DEFAULT_LINEBREAK = LINEBREAK_NONE;
 our $DEFAULT_RUNIN_WIDTH  = 2;
 our $DEFAULT_RUNOUT_WIDTH = 2;
 
-if ($] < 5.016) {
-    require charnames;
-    charnames->import(':full');
+BEGIN {
+    if ($] < 5.016) {
+	require charnames;
+	charnames->import(':full');
+    }
 }
 
 our %TABSTYLE = (
