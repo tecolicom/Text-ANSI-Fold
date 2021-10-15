@@ -96,7 +96,11 @@ our $DEFAULT_LINEBREAK = LINEBREAK_NONE;
 our $DEFAULT_RUNIN_WIDTH  = 2;
 our $DEFAULT_RUNOUT_WIDTH = 2;
 
-use charnames ':full';
+if ($] < 5.016) {
+    require charnames;
+    charnames->import(':full');
+}
+
 our %TABSTYLE = (
     pairmap {
 	( $a =~ s/_/-/gr, ref $b ? $b : [ $b, $b ] );
