@@ -288,6 +288,7 @@ sub fold {
 	if (s/\A($erase_re)//) {
 	    $folded .= $1 unless $obj->{discard}->{EL};
 	    @bg_stack = @color_stack;
+	    push @color_stack, $1;
 	    next;
 	}
 	# reset
