@@ -143,6 +143,7 @@ sub new {
 	padding   => 0,
 	boundary  => '',
 	padchar   => ' ',
+	prefix    => '',
 	ambiguous => 'narrow',
 	margin    => 0,
 	linebreak => $DEFAULT_LINEBREAK,
@@ -430,6 +431,11 @@ sub fold {
 	$folded .= $padding;
     }
 
+    if (length and my $p = $opt{prefix}) {
+	my $s = ref $p eq 'CODE' ? &$p : $p;
+	$_ = $s . $_;
+    }
+
     ($folded . $eol, $_, $width - $room);
 }
 
@@ -710,6 +716,15 @@ B<padchar> option specifies character used to fill up the remainder of
 given width.
 
     ansi_fold($text, 80, padding => 1, padchar => '_');
+
+=item B<prefix> => I<string> | I<coderef>
+
+B<prefix> string is inserted before remained string if it is not
+empty.  This is convenient to produce indented series of text by
+B<chops> interface.
+
+If the value is reference to subroutine, its result is used as a
+prefix string.
 
 =item B<ambiguous> => "narrow" or "wide"
 
