@@ -358,7 +358,7 @@ sub fold {
     }
 
     if ($word_char_re
-	and my $tail = (/\A(${word_char_re}+)/)[0]
+	and my($tail) = /\A(${word_char_re}+)/
 	and $folded =~ m{
 		^
 		( (?: [^\e]* ${csi_re}++ ) *+ )
