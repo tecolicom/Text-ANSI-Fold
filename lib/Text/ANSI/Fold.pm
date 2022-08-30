@@ -135,30 +135,41 @@ our %TABSTYLE = (
 
     );
 
+my @default = (
+    text      => '',
+    width     => undef,
+    padding   => 0,
+    boundary  => '',
+    padchar   => ' ',
+    prefix    => '',
+    ambiguous => 'narrow',
+    margin    => 0,
+    linebreak => $DEFAULT_LINEBREAK,
+    runin     => $DEFAULT_RUNIN_WIDTH,
+    runout    => $DEFAULT_RUNOUT_WIDTH,
+    expand    => 0,
+    tabstop   => 8,
+    tabhead   => ' ',
+    tabspace  => ' ',
+    discard   => {},
+    );
+
 sub new {
     my $class = shift;
-    my $obj = bless {
-	text      => '',
-	width     => undef,
-	padding   => 0,
-	boundary  => '',
-	padchar   => ' ',
-	prefix    => '',
-	ambiguous => 'narrow',
-	margin    => 0,
-	linebreak => $DEFAULT_LINEBREAK,
-	runin     => $DEFAULT_RUNIN_WIDTH,
-	runout    => $DEFAULT_RUNOUT_WIDTH,
-	expand    => 0,
-	tabstop   => 8,
-	tabhead   => ' ',
-	tabspace  => ' ',
-	discard   => {},
-    }, $class;
-
+    my $obj = bless { @default }, $class;
     $obj->configure(@_) if @_;
-
     $obj;
+}
+
+INTERNAL_METHODS: {
+    sub spawn {
+	my $obj = shift;
+	my $class = ref $obj;
+	my %new = ( %$obj, pairgrep { defined $b } @_ );
+	bless \%new, $class;
+    }
+    sub do_runin  { $_[0]->{linebreak} & LINEBREAK_RUNIN  && $_[0]->{runin}  > 0 }
+    sub do_runout { $_[0]->{linebreak} & LINEBREAK_RUNOUT && $_[0]->{runout} > 0 }
 }
 
 use Text::ANSI::Fold::Japanese::W3C qw(%prohibition);
@@ -236,33 +247,29 @@ sub fold {
     shift;
 
     local $_ = shift // '';
-    my %opt = ( %$obj, pairgrep { defined $b } @_ );
+    my $opt = $obj->spawn(splice @_);
 
-    my $width = $opt{width} // die;
-    if ($width < 0) {
-	$width = ~0 >> 1; # INT_MAX
-    }
+    my $width = $opt->{width};
+    croak "no width" if not defined $width;
+    croak "width must be a number" if ref $width;
 
-    if (not defined $width or $width < 1) {
-	croak "invalid width";
-    }
+    # negative number -> MAX_INT
+    $width = ~0 >> 1 if $width < 0;
 
-    if ($width <= $opt{margin}) {
-	croak "invalid margin";
-    }
-    $width -= $opt{margin};
+    croak "margin too big" if $width <= $opt->{margin};
+    $width -= $opt->{margin};
 
     my $word_char_re =
 	    { word => $alphanum_re, space => $nonspace_re }
-	    ->{$opt{boundary} // ''};
+	    ->{$opt->{boundary} // ''};
 
-    $Text::VisualWidth::PP::EastAsian = $opt{ambiguous} eq 'wide';
+    $Text::VisualWidth::PP::EastAsian = $opt->{ambiguous} eq 'wide';
 
     my $folded = '';
     my $eol = '';
     my $room = $width;
     @bg_stack = @color_stack = @reset = ();
-    my $yield_re = $opt{expand} ? qr/[^\e\n\f\r\t]/ : qr/[^\e\n\f\r]/;
+    my $yield_re = $opt->{expand} ? qr/[^\e\n\f\r\t]/ : qr/[^\e\n\f\r]/;
 
   FOLD:
     while (length) {
@@ -312,9 +319,9 @@ sub fold {
 	}
 
 	# tab
-	if ($opt{expand} and s/\A\t//) {
-	    my $space = $opt{tabstop} - ($width - $room) % $opt{tabstop};
-	    $_ = $opt{tabhead} . $opt{tabspace} x ($space - 1) . $_;
+	if ($opt->{expand} and s/\A\t//) {
+	    my $space = $opt->{tabstop} - ($width - $room) % $opt->{tabstop};
+	    $_ = $opt->{tabhead} . $opt->{tabspace} x ($space - 1) . $_;
 	    next;
 	}
 
@@ -380,28 +387,29 @@ sub fold {
     ##
     ## RUN-OUT
     ##
-    if ($_ ne ''
-	and $opt{linebreak} & LINEBREAK_RUNOUT and $opt{runout} > 0
-	and $folded =~ m{ (?<color>  (?! ${reset_re}) ${color_re}*+ )
+    if ($_ ne '' and $opt->do_runout) {
+	if ($folded =~ m{ (?<color>  (?! ${reset_re}) ${color_re}*+ )
 			  (?<runout> $prohibition_re{end}+ ) \z }xp
-	and ${^PREMATCH} ne ''
-	and (my $w = vwidth $+{runout}) <= $opt{runout}) {
-	$folded = ${^PREMATCH};
-	$_ = join '', ${^MATCH}, @reset, $_;
-	pop_reset() if $+{color};
-	$room += $w;
+	    and ${^PREMATCH} ne ''
+	    and (my $w = vwidth $+{runout}) <= $opt->{runout}) {
+
+	    $folded = ${^PREMATCH};
+	    $_ = join '', ${^MATCH}, @reset, $_;
+	    pop_reset() if $+{color};
+	    $room += $w;
+	}
     }
 
     $folded .= pop_reset() if @reset;
 
-    $room += $opt{margin};
+    $room += $opt->{margin};
 
     ##
     ## RUN-IN
     ##
-    if ($opt{linebreak} & LINEBREAK_RUNIN and $opt{runin} > 0) {
+    if ($opt->do_runin) {
 	my @runin;
-	my $m = $opt{runin};
+	my $m = $opt->{runin};
 	while ($m > 0 and
 	       m{\A (?<color> ${color_re}*+)
 	            (?<runin> $prohibition_re{head})
@@ -423,15 +431,15 @@ sub fold {
 	$_ = join '', @color_stack, $_ if $_ ne '';
     }
 
-    if ($opt{padding} and $room > 0) {
-	my $padding = $opt{padchar} x $room;
+    if ($opt->{padding} and $room > 0) {
+	my $padding = $opt->{padchar} x $room;
 	if (@bg_stack) {
 	    $padding = join '', @bg_stack, $padding, SGR_RESET;
 	}
 	$folded .= $padding;
     }
 
-    if (length and my $p = $opt{prefix}) {
+    if (length and my $p = $opt->{prefix}) {
 	my $s = ref $p eq 'CODE' ? &$p : $p;
 	$_ = $s . $_;
     }
@@ -465,12 +473,18 @@ sub simple_fold {
 }
 
 ######################################################################
+# EXTERNAL METHODS
 
-sub text {
+sub text :lvalue {
     my $obj = shift;
-    croak "Invalid argument" unless @_;
-    $obj->{text} = shift;
-    $obj;
+    if (@_ == 0) {
+	$obj->{text};
+    } elsif (@_ == 1) {
+	$obj->{text} = shift;
+	$obj;
+    } else {
+	croak "Invalid argument";
+    }
 }
 
 sub retrieve {
