@@ -563,6 +563,10 @@ combining characters properly.  Japanese text formatting with
 head-or-end of line prohibition character is also supported.  Set
 the linebreak mode to enable it.
 
+Since the overhead of ANSI escape sequence handling is not significant
+when the data does not include them, this module can be used for
+normal text processing with little penalty.
+
 Use exported B<ansi_fold> function to fold original text, with number
 of visual columns you want to cut off the text.
 
@@ -625,7 +629,7 @@ saved value.
 
 =head1 STRING OBJECT INTERFACE
 
-Fold object can hold string inside by B<text> method.
+A fold object can hold string inside by B<text> method.
 
     $f->text("text");
 
@@ -637,13 +641,14 @@ empty string if nothing remained.
         print "\n" if $folded !~ /\n\z/;
     }
 
-Method B<chops> returns chopped string list.  Because B<text> method
-returns the object itself, you can use B<text> and B<chops> like this:
+Method B<chops> returns chopped string list.  Because the B<text>
+method returns the object itself when called with a parameter, you can
+use B<text> and B<chops> in series:
 
-    print join "\n", $f->text($text)->chops;
+    print join "\n", $f->text($string)->chops;
 
 Actually, text can be set by B<new> or B<configure> method through
-B<text> option.  Next program just works.
+B<text> parameter.  Next program just works.
 
     use Text::ANSI::Fold;
     while (<>) {
@@ -755,7 +760,7 @@ If the trimmed text end with prohibited characters (e.g. opening
 parenthesis), they are ran-out to the head of next line, if it fits to
 maximum width.
 
-Default B<linebreak> mode is B<LINEBREAK_NONE> and can be set one of
+Default B<linebreak> mode is C<LINEBREAK_NONE> and can be set one of
 those:
 
     LINEBREAK_NONE
@@ -763,7 +768,7 @@ those:
     LINEBREAK_RUNOUT
     LINEBREAK_ALL
 
-Import-tag B<:constants> can be used to access these constants.
+Import-tag C<:constants> can be used to access these constants.
 
 Option B<runin> and B<runout> is used to set maximum width of moving
 characters.  Default values are both 2.
@@ -827,8 +832,8 @@ tabspace.
 
 =head1 EXAMPLE
 
-Next code implements almost perfect fold command for multi byte
-characters with prohibited character handling.
+Next code implements almost fully-equipped fold command for multi byte
+text with Japanese prohibited character handling.
 
     #!/usr/bin/env perl
     
@@ -910,7 +915,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2018- Kazumasa Utashiro.
+Copyright 2018-2022 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -45,6 +45,10 @@ combining characters properly.  Japanese text formatting with
 head-or-end of line prohibition character is also supported.  Set
 the linebreak mode to enable it.
 
+Since the overhead of ANSI escape sequence handling is not significant
+when the data does not include them, this module can be used for
+normal text processing with little penalty.
+
 Use exported **ansi\_fold** function to fold original text, with number
 of visual columns you want to cut off the text.
 
@@ -107,7 +111,7 @@ saved value.
 
 # STRING OBJECT INTERFACE
 
-Fold object can hold string inside by **text** method.
+A fold object can hold string inside by **text** method.
 
     $f->text("text");
 
@@ -119,13 +123,14 @@ empty string if nothing remained.
         print "\n" if $folded !~ /\n\z/;
     }
 
-Method **chops** returns chopped string list.  Because **text** method
-returns the object itself, you can use **text** and **chops** like this:
+Method **chops** returns chopped string list.  Because the **text**
+method returns the object itself when called with a parameter, you can
+use **text** and **chops** in series:
 
-    print join "\n", $f->text($text)->chops;
+    print join "\n", $f->text($string)->chops;
 
 Actually, text can be set by **new** or **configure** method through
-**text** option.  Next program just works.
+**text** parameter.  Next program just works.
 
     use Text::ANSI::Fold;
     while (<>) {
@@ -233,7 +238,7 @@ function as well as **new** and **configure** method.
     parenthesis), they are ran-out to the head of next line, if it fits to
     maximum width.
 
-    Default **linebreak** mode is **LINEBREAK\_NONE** and can be set one of
+    Default **linebreak** mode is `LINEBREAK_NONE` and can be set one of
     those:
 
         LINEBREAK_NONE
@@ -241,7 +246,7 @@ function as well as **new** and **configure** method.
         LINEBREAK_RUNOUT
         LINEBREAK_ALL
 
-    Import-tag **:constants** can be used to access these constants.
+    Import-tag `:constants` can be used to access these constants.
 
     Option **runin** and **runout** is used to set maximum width of moving
     characters.  Default values are both 2.
@@ -300,8 +305,8 @@ function as well as **new** and **configure** method.
 
 # EXAMPLE
 
-Next code implements almost perfect fold command for multi byte
-characters with prohibited character handling.
+Next code implements almost fully-equipped fold command for multi byte
+text with Japanese prohibited character handling.
 
     #!/usr/bin/env perl
     
@@ -378,7 +383,7 @@ Kazumasa Utashiro
 
 # LICENSE
 
-Copyright 2018- Kazumasa Utashiro.
+Copyright 2018-2022 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
