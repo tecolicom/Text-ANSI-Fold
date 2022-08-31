@@ -57,9 +57,9 @@ of visual columns you want to cut off the text.
 It returns a pair of strings; first one is folded text, and second is
 the rest.
 
-Additional third result is the visual width of folded text.  You may
-want to know how many columns returned string takes for further
-processing.
+Additional third result is the visual width of the folded text.  It is
+not always same as given width, and you may want to know how many
+columns returned string takes for further processing.
 
 Negative width value is taken as unlimited.  So the string is never
 folded, but you can use this to expand tabs and to get visual string
@@ -171,11 +171,11 @@ function as well as **new** and **configure** method.
     Array reference can be specified but works only with **chops** method,
     and retunrs empty string for zero width.
 
-- **boundary** => _word_ or _space_
+- **boundary** => `word` or `space`
 
-    Option **boundary** takes _word_ and _space_ as a valid value.  These
+    Option **boundary** takes `word` and `space` as a valid value.  These
     prohibit to fold a line in the middle of ASCII/Latin sequence.  Value
-    _word_ means a sequence of alpha-numeric characters, and _space_
+    `word` means a sequence of alpha-numeric characters, and `space`
     means simply non-space printables.
 
     This operation takes place only when enough space will be provided to
@@ -212,13 +212,13 @@ function as well as **new** and **configure** method.
     If the value is reference to subroutine, its result is used as a
     prefix string.
 
-- **ambiguous** => "narrow" or "wide"
+- **ambiguous** => `narrow` or `wide`
 
     Tells how to treat Unicode East Asian ambiguous characters.  Default
-    is "narrow" which means single column.  Set "wide" to tell the module
-    to treat them as wide character.
+    is `narrow` which means single column.  Set `wide` to tell the
+    module to treat them as wide character.
 
-- **discard** => \[ "EL", "OSC" \]
+- **discard** => \[ `EL`, `OSC` \]
 
     Specify the list reference of control sequence name to be discarded.
     **EL** means Erase Line; **OSC** means Operating System Command, defined
