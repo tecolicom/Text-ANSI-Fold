@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.14 2022-08-31T10:24:09Z
+
+    - Method "text" has :lvalue attribute and is now assignable.
+    - Non-number width parameter causes fatal error in fold().
+
 2.1301 2022-08-05T08:10:23Z
 
     - Fix bug of losing "0" with word-boundary.
