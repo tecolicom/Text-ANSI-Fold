@@ -677,10 +677,11 @@ reference, and chops text into given width list.
     my @list = $fold->text("1223334444")->chops(width => [ 1, 2, 3 ]);
     # return ("1", "22", "333") and keep "4444"
 
-If the width value is 0, it returns empty string.
+If the width value is 0, it returns empty string.  Negative width
+value takes all the rest of stored string.
 
-Negative width value takes all the rest of holded string in
-B<retrieve> and B<chops> method.
+Method B<text> has an lvalue attribute, so it can be assigned to, as
+well as can be a subject of mutating operator such as C<s///>.
 
 =head1 OPTIONS
 
