@@ -10,6 +10,7 @@ use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
 use Carp;
 use List::Util qw(pairmap pairgrep);
+use Scalar::Util qw(looks_like_number);
 use Text::VisualWidth::PP 'vwidth';
 
 ######################################################################
@@ -201,10 +202,10 @@ my %prohibition_re = do {
 };
 
 sub configure {
-    my $obj = ref $_[0] ? $_[0] : do {
-	state $private = __PACKAGE__->new;
-    };
-    shift;
+    my $obj = shift;
+    if (not ref $obj) {
+	$obj = state $private = __PACKAGE__->new;
+    }
     croak "invalid parameter" if @_ % 2;
     while (@_ >= 2) {
 	my($a, $b) = splice @_, 0, 2;
@@ -240,24 +241,21 @@ sub pop_reset {
     @reset ? do { @color_stack = (); pop @reset } : '';
 }
 
-sub fold {
-    my $obj = ref $_[0] ? $_[0] : do {
-	state $private = configure();
-    };
-    shift;
+use constant MAX_INT => ~0 >> 1;
 
+sub fold {
+    my $obj = shift;
     local $_ = shift // '';
+
+    if (not ref $obj) {
+	$obj = state $private = configure();
+    }
     my $opt = $obj->spawn(splice @_);
 
     my $width = $opt->{width};
-    croak "no width" if not defined $width;
-    croak "width must be a number" if ref $width;
-
-    # negative number -> MAX_INT
-    $width = ~0 >> 1 if $width < 0;
-
-    croak "margin too big" if $width <= $opt->{margin};
-    $width -= $opt->{margin};
+    croak "invalid width" if not looks_like_number $width;
+    $width = MAX_INT if $width < 0;
+    ($width -= $opt->{margin}) > 0 or croak "margin too big";
 
     my $word_char_re =
 	    { word => $alphanum_re, space => $nonspace_re }
@@ -479,11 +477,10 @@ sub text :lvalue {
     my $obj = shift;
     if (@_ == 0) {
 	$obj->{text};
-    } elsif (@_ == 1) {
-	$obj->{text} = shift;
-	$obj;
     } else {
-	croak "Invalid argument";
+	croak "Invalid argument" if @_ > 1;
+    	$obj->{text} = shift;
+	$obj;
     }
 }
 
