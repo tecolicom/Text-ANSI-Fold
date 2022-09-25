@@ -362,6 +362,9 @@ sub fold {
 	}
     }
 
+    ##
+    ## --boundary=word
+    ##
     if ($word_char_re
 	and my($tail) = /\A(${word_char_re}+)/
 	and $folded =~ m{
@@ -376,7 +379,9 @@ sub fold {
 	## provided for the word in the next turn.
 	my($s, $e) = ($-[3], $+[3]);
 	my $l = $e - $s;
-	if ($room + $l < $width and $l + length($tail) <= $width) {
+	## prefix length
+	my $p = $opt->{prefix} eq '' ? 0 : vwidth $opt->{prefix};
+	if ($room + $l < $width - $p and $l + length($tail) <= $width - $p) {
 	    $_ = substr($folded, $s, $l, '') . pop_reset() . $_;
 	    $room += $l;
 	}
