@@ -17,13 +17,24 @@ use Text::VisualWidth::PP 'vwidth';
 use Exporter 'import';
 our %EXPORT_TAGS = (
     constants => [ qw(
-		   &LINEBREAK_NONE
-		   &LINEBREAK_ALL
-		   &LINEBREAK_RUNIN
-		   &LINEBREAK_RUNOUT
-		   ) ] );
+	&LINEBREAK_NONE
+	&LINEBREAK_ALL
+	&LINEBREAK_RUNIN
+	&LINEBREAK_RUNOUT
+	) ],
+    regex => [ qw(
+	$reset_re
+	$color_re
+	$erase_re
+	$csi_re
+	$osc_re
+	) ],
+    );
+
 our @EXPORT_OK = ( qw(&ansi_fold),
-		   @{$EXPORT_TAGS{constants}} );
+		   @{$EXPORT_TAGS{constants}},
+		   @{$EXPORT_TAGS{regex}},
+    );
 
 sub ansi_fold {
     my($text, $width, @option) = @_;
