@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.15 2022-09-26T01:13:52Z
+
+    - Fix bug of --boundary=word does not work with --prefix option.
+
 2.14 2022-08-31T10:24:09Z
 
     - Method "text" has :lvalue attribute and is now assignable.
