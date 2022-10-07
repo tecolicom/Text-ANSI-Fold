@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.16 2022-10-07T06:27:16Z
+
+    - Make :regex tagged variables exportable.
+
 2.15 2022-09-26T01:13:52Z
 
     - Fix bug of --boundary=word does not work with --prefix option.
