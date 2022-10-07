@@ -42,19 +42,19 @@ sub ansi_fold {
 }
 ######################################################################
 
-my $alphanum_re = qr{ [_\d\p{Latin}] }x;
-my $nonspace_re = qr{ \p{IsPrintableLatin} }x;
-my $reset_re    = qr{ \e \[ [0;]* m }x;
-my $color_re    = qr{ \e \[ [\d;]* m }x;
-my $erase_re    = qr{ \e \[ [\d;]* K }x;
-my $csi_re      = qr{
+our $alphanum_re = qr{ [_\d\p{Latin}] }x;
+our $nonspace_re = qr{ \p{IsPrintableLatin} }x;
+our $reset_re    = qr{ \e \[ [0;]* m }x;
+our $color_re    = qr{ \e \[ [\d;]* m }x;
+our $erase_re    = qr{ \e \[ [\d;]* K }x;
+our $csi_re      = qr{
     # see ECMA-48 5.4 Control sequences
     (?: \e\[ | \x9b )	# csi
     [\x30-\x3f]*	# parameter bytes
     [\x20-\x2f]*	# intermediate bytes
     [\x40-\x7e]		# final byte
 }x;
-my $osc_re      = qr{
+our $osc_re      = qr{
     # see ECMA-48 8.3.89 OSC - OPERATING SYSTEM COMMAND
     (?: \e\] | \x9d )		# osc
     [\x08-\x13\x20-\x7d]*+	# command
