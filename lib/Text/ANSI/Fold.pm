@@ -117,10 +117,8 @@ BEGIN {
 
 our %TABSTYLE = (
     pairmap {
-	( $a =~ s/_/-/gr, ref $b ? $b : [ $b, $b ] );
+	( $a =~ s/_/-/gr => ref $b ? $b : [ $b, $b ] );
     }
-    space  => [ ' ', ' ' ],
-    dot    => [ '.', '.' ],
     symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",			    # ␉
 		"\N{SYMBOL FOR SPACE}" ],				    # ␠
     shade  => [ "\N{MEDIUM SHADE}",					    # ▒
@@ -132,6 +130,10 @@ our %TABSTYLE = (
     dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",				    # ╺
 		"\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],	    # ╌
 
+    dot          => '.',
+    space        => ' ',
+    emspace      => "\N{EM SPACE}",					    #  
+    middle_dot   => "\N{MIDDLE DOT}",					    # ·
     arrow        => "\N{RIGHTWARDS ARROW}",				    # →
     double_arrow => "\N{RIGHTWARDS DOUBLE ARROW}",			    # ⇒
     triple_arrow => "\N{RIGHTWARDS TRIPLE ARROW}",			    # ⇛
@@ -827,8 +829,6 @@ C<symbols>'s tabhead and C<space>'s tabspace.
 
 Currently these names are available.
 
-    space  => [ ' ', ' ' ],
-    dot    => [ '.', '.' ],
     symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
                 "\N{SYMBOL FOR SPACE}" ],
     shade  => [ "\N{MEDIUM SHADE}",
@@ -843,6 +843,10 @@ Currently these names are available.
 Below are styles providing same character for both tabhead and
 tabspace.
 
+    dot          => '.',
+    space        => ' ',
+    emspace      => "\N{EM SPACE}",
+    middle-dot   => "\N{MIDDLE DOT}",
     arrow        => "\N{RIGHTWARDS ARROW}",
     double-arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
     triple-arrow => "\N{RIGHTWARDS TRIPLE ARROW}",

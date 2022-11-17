@@ -275,8 +275,6 @@ function as well as **new** and **configure** method.
 
     Currently these names are available.
 
-        space  => [ ' ', ' ' ],
-        dot    => [ '.', '.' ],
         symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
                     "\N{SYMBOL FOR SPACE}" ],
         shade  => [ "\N{MEDIUM SHADE}",
@@ -291,6 +289,10 @@ function as well as **new** and **configure** method.
     Below are styles providing same character for both tabhead and
     tabspace.
 
+        dot          => '.',
+        space        => ' ',
+        emspace      => "\N{EM SPACE}",
+        middle-dot   => "\N{MIDDLE DOT}",
         arrow        => "\N{RIGHTWARDS ARROW}",
         double-arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
         triple-arrow => "\N{RIGHTWARDS TRIPLE ARROW}",
