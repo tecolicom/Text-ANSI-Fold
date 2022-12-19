@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.17 2022-12-19T10:07:17Z
+
+    - Add middle-dot and emspace tabstyles.
+
 2.16 2022-10-07T06:27:16Z
 
     - Make :regex tagged variables exportable.

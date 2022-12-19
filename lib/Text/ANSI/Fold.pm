@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.16";
+our $VERSION = "2.17";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -552,7 +552,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.16
+Version 2.17
 
 =head1 SYNOPSIS
 
