@@ -379,23 +379,25 @@ sub fold {
     ## --boundary=word
     ##
     if ($word_char_re
-	and my($tail) = /\A(${word_char_re}+)/
+	and my($tail) = /\A( (?: ${word_char_re} \cH ? ) + )/x
 	and $folded =~ m{
 		^
 		( (?: [^\e]* ${csi_re}++ ) *+ )
 		( .*? )
-		( ${word_char_re}+ )
+		( (?: ${word_char_re} \cH ? ) + )
 		\z
 	}x
 	) {
 	## Break line before word only when enough space will be
 	## provided for the word in the next turn.
 	my($s, $e) = ($-[3], $+[3]);
-	my $l = $e - $s;
+	my $head = $3;
+	s/.\cH//g for $head, $tail;
+	my $l = length $head;
 	## prefix length
 	my $p = $opt->{prefix} eq '' ? 0 : vwidth $opt->{prefix};
 	if ($room + $l < $width - $p and $l + length($tail) <= $width - $p) {
-	    $_ = substr($folded, $s, $l, '') . pop_reset() . $_;
+	    $_ = substr($folded, $s, $e - $s, '') . pop_reset() . $_;
 	    $room += $l;
 	}
     }
