@@ -12,6 +12,7 @@ use Carp;
 use List::Util qw(pairmap pairgrep);
 use Scalar::Util qw(looks_like_number);
 use Text::VisualWidth::PP 'vwidth';
+sub pwidth { vwidth $_[0] =~ s/\X\cH{1,2}//gr }
 
 ######################################################################
 use Exporter 'import';
@@ -407,9 +408,12 @@ sub fold {
     ##
     if ($_ ne '' and $opt->do_runout) {
 	if ($folded =~ m{ (?<color>  (?! ${reset_re}) ${color_re}*+ )
-			  (?<runout> $prohibition_re{end}+ ) \z }xp
+			  (?<runout>
+			    (?: ($prohibition_re{end}) (?: \cH{1,2} \g{-1})* )+
+			  ) \z
+			}xp
 	    and ${^PREMATCH} ne ''
-	    and (my $w = vwidth $+{runout}) <= $opt->{runout}) {
+	    and (my $w = pwidth $+{runout}) <= $opt->{runout}) {
 
 	    $folded = ${^PREMATCH};
 	    $_ = join '', ${^MATCH}, @reset, $_;
