@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.17";
+our $VERSION = "2.18";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -554,7 +554,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.17
+Version 2.18
 
 =head1 SYNOPSIS
 
@@ -893,6 +893,10 @@ text with Japanese prohibited character handling.
 
 =over 7
 
+=item L<https://github.com/tecolicom/ANSI-Tools>
+
+Collection of ANSI related tools.
+
 =item L<Text::ANSI::Fold>
 
 =item L<https://github.com/kaz-utashiro/Text-ANSI-Fold>
@@ -949,7 +953,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2018-2022 Kazumasa Utashiro.
+Copyright 2018-2023 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

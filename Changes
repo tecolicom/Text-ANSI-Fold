@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.18 2023-01-05T06:24:41Z
+
+    - Allow boundary word to include backspaces.
+
 2.17 2022-12-19T10:07:17Z
 
     - Add middle-dot and emspace tabstyles.
