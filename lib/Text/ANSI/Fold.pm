@@ -435,7 +435,7 @@ sub fold {
 	while ($m > 0 and
 	       m{\A (?<color> ${color_re}*+)
 	            (?<runin> $prohibition_re{head} )
-		    ( \cH \g{runin} )* # multiple strike
+		    ( \cH{1,2} \g{runin} )* # multiple strike
 	            (?<reset> (?: $erase_re* $reset_re+ $erase_re* )? )
 	       }xp) {
 	    my $w = vwidth $+{runin};
