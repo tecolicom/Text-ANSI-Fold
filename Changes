@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.19 2023-01-06T02:30:22Z
+
+    - Allow double-struck run-in/out characters with backspace.
+    - Move git repository.
+
 2.18 2023-01-05T06:24:41Z
 
     - Allow boundary word to include backspaces.

@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.18";
+our $VERSION = "2.19";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -559,7 +559,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.18
+Version 2.19
 
 =head1 SYNOPSIS
 
@@ -905,7 +905,7 @@ Collection of ANSI related tools.
 
 =item L<Text::ANSI::Fold>
 
-=item L<https://github.com/kaz-utashiro/Text-ANSI-Fold>
+=item L<https://github.com/tecolicom/Text-ANSI-Fold>
 
 Distribution and repository.
 

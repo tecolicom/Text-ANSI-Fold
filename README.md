@@ -1,11 +1,11 @@
-[![Actions Status](https://github.com/kaz-utashiro/Text-ANSI-Fold/workflows/test/badge.svg)](https://github.com/kaz-utashiro/Text-ANSI-Fold/actions) [![MetaCPAN Release](https://badge.fury.io/pl/Text-ANSI-Fold.svg)](https://metacpan.org/release/Text-ANSI-Fold)
+[![Actions Status](https://github.com/tecolicom/Text-ANSI-Fold/workflows/test/badge.svg)](https://github.com/tecolicom/Text-ANSI-Fold/actions) [![MetaCPAN Release](https://badge.fury.io/pl/Text-ANSI-Fold.svg)](https://metacpan.org/release/Text-ANSI-Fold)
 # NAME
 
 Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and Asian wide characters with prohibition character handling.
 
 # VERSION
 
-Version 2.18
+Version 2.19
 
 # SYNOPSIS
 
@@ -339,7 +339,7 @@ text with Japanese prohibited character handling.
     Collection of ANSI related tools.
 
 - [Text::ANSI::Fold](https://metacpan.org/pod/Text%3A%3AANSI%3A%3AFold)
-- [https://github.com/kaz-utashiro/Text-ANSI-Fold](https://github.com/kaz-utashiro/Text-ANSI-Fold)
+- [https://github.com/tecolicom/Text-ANSI-Fold](https://github.com/tecolicom/Text-ANSI-Fold)
 
     Distribution and repository.
 
