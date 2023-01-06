@@ -34,11 +34,12 @@ Version 2.18
 
 # DESCRIPTION
 
-Text::ANSI::Fold provides capability to fold a text into two strings
-by given width.  Text can include ANSI terminal sequences.  If the
-text is divided in the middle of ANSI-effect region, reset sequence is
-appended to folded text, and recover sequence is prepended to trimmed
-string.
+[Text::ANSI::Fold](https://metacpan.org/pod/Text%3A%3AANSI%3A%3AFold) provides capability to divide a text into two
+parts by given width.  Text can include ANSI terminal sequences and
+the width is calculated by its visible representation.  If the text is
+divided in the middle of colored region, reset sequence is appended to
+the former text, and color recover sequence is inserted before the
+latter string.
 
 This module also support Unicode Asian full-width and non-spacing
 combining characters properly.  Japanese text formatting with
@@ -47,7 +48,7 @@ the linebreak mode to enable it.
 
 Since the overhead of ANSI escape sequence handling is not significant
 when the data does not include them, this module can be used for
-normal text processing with little penalty.
+normal text processing with small penalty.
 
 Use exported **ansi\_fold** function to fold original text, with number
 of visual columns you want to cut off the text.
@@ -57,9 +58,9 @@ of visual columns you want to cut off the text.
 It returns a pair of strings; first one is folded text, and second is
 the rest.
 
-Additional third result is the visual width of the folded text.  It is
-not always same as given width, and you may want to know how many
-columns returned string takes for further processing.
+Additional third result is visual width of the folded text.  It is not
+always same as given width, and you may want to know how many columns
+returned string takes for further processing.
 
 Negative width value is taken as unlimited.  So the string is never
 folded, but you can use this to expand tabs and to get visual string
