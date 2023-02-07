@@ -254,6 +254,7 @@ sub put_reset { @reset = shift };
 sub pop_reset {
     @reset ? do { @color_stack = (); pop @reset } : '';
 }
+sub vlength { length $_[0] =~ s/.\cH//gr }
 
 use constant MAX_INT => ~0 >> 1;
 
@@ -380,25 +381,21 @@ sub fold {
     ## --boundary=word
     ##
     if ($word_char_re
-	and my($tail) = /\A( (?: ${word_char_re} \cH ? ) + )/x
-	and $folded =~ m{
-		^
-		( (?: [^\e]* ${csi_re}++ ) *+ )
-		( .*? )
-		( (?: ${word_char_re} \cH ? ) + )
-		\z
-	}x
-	) {
+	and my($w2) = /\A( (?: ${word_char_re} \cH ? ) + )/x
+	and my($lead, $w1) = $folded =~ m{
+		\A ## avoid CSI final char does not make a word
+		   ( (?: [^\e]* ${csi_re}++ ) *+ .*? )
+		   ( (?: ${word_char_re} \cH ? ) + )
+		\z }x
+    ) {
 	## Break line before word only when enough space will be
 	## provided for the word in the next turn.
-	my($s, $e) = ($-[3], $+[3]);
-	my $head = $3;
-	s/.\cH//g for $head, $tail;
-	my $l = length $head;
+	my $l = vlength($w1);
 	## prefix length
-	my $p = $opt->{prefix} eq '' ? 0 : vwidth $opt->{prefix};
-	if ($room + $l < $width - $p and $l + length($tail) <= $width - $p) {
-	    $_ = substr($folded, $s, $e - $s, '') . pop_reset() . $_;
+	my $p = $opt->{prefix} eq '' ? 0 : vwidth($opt->{prefix});
+	if ($room + $l < $width - $p and $l + vlength($w2) <= $width - $p) {
+	    $folded = $lead;
+	    $_ = $w1 . pop_reset() . $_;
 	    $room += $l;
 	}
     }
