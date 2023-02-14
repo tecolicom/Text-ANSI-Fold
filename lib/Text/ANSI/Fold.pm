@@ -358,7 +358,7 @@ sub fold {
 	}
 	next if $bs;
 
-	if (s/\A(\e*(?:${yield_re}(?!\cH))+)//) {
+	if (s/\A(\e+|(?:${yield_re}(?!\cH))+)//) {
 	    my $s = $1;
 	    if ((my $w = vwidth($s)) <= $room) {
 		$folded .= $s;
