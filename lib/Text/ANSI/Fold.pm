@@ -383,7 +383,7 @@ sub fold {
     if ($word_char_re
 	and my($w2) = /\A( (?: ${word_char_re} \cH ? ) + )/x
 	and my($lead, $w1) = $folded =~ m{
-		\A ## avoid CSI final char does not make a word
+		\A ## avoid CSI final char making a word
 		   ( (?: [^\e]* ${csi_re}++ ) *+ .*? )
 		   ( (?: ${word_char_re} \cH ? ) + )
 		\z }x
