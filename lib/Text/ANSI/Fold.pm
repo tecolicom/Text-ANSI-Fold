@@ -254,7 +254,6 @@ sub put_reset { @reset = shift };
 sub pop_reset {
     @reset ? do { @color_stack = (); pop @reset } : '';
 }
-sub vlength { length $_[0] =~ s/.\cH//gr }
 
 use constant MAX_INT => ~0 >> 1;
 
@@ -390,10 +389,10 @@ sub fold {
     ) {
 	## Break line before word only when enough space will be
 	## provided for the word in the next turn.
-	my $l = vlength($w1);
+	my $l = pwidth($w1);
 	## prefix length
 	my $p = $opt->{prefix} eq '' ? 0 : vwidth($opt->{prefix});
-	if ($room + $l < $width - $p and $l + vlength($w2) <= $width - $p) {
+	if ($room + $l < $width - $p and $l + pwidth($w2) <= $width - $p) {
 	    $folded = $lead;
 	    $_ = $w1 . pop_reset() . $_;
 	    $room += $l;
