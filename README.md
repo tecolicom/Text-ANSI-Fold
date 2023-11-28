@@ -165,14 +165,14 @@ function as well as **new** and **configure** method.
 
     $f->configure(boundary => 'word');
 
-- **width** => _n_, _\[ n, m, ... \]_
+- **width** => _n_ | _\[ n, m, ... \]_
 
     Specify folding width.  Negative value means all the rest.
 
     Array reference can be specified but works only with **chops** method,
     and retunrs empty string for zero width.
 
-- **boundary** => `word` or `space`
+- **boundary** => `word` | `space`
 
     Option **boundary** takes `word` and `space` as a valid value.  These
     prohibit to fold a line in the middle of ASCII/Latin sequence.  Value

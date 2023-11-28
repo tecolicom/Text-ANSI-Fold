@@ -267,7 +267,8 @@ sub fold {
     my $opt = $obj->spawn(splice @_);
 
     my $width = $opt->{width};
-    croak "invalid width" if not looks_like_number $width;
+    looks_like_number $width and $width == int($width)
+	or croak "$width: invalid width";
     $width = MAX_INT if $width < 0;
     ($width -= $opt->{margin}) > 0 or croak "margin too big";
 
@@ -474,7 +475,8 @@ sub simple_fold {
     my $width = shift;
     $width <= 0 and croak "parameter error";
 
-    my($left, $right) = $orig =~ m/^(\X{0,$width}+)(.*)/ or die;
+    my($left, $right) = $orig =~ m/^(\X{0,$width}+)(.*)/
+	or croak "$width: unexpected width";
 
     my $w = vwidth($left);
     while ($w > $width) {
@@ -717,14 +719,14 @@ function as well as B<new> and B<configure> method.
 
 =over 7
 
-=item B<width> => I<n>, I<[ n, m, ... ]>
+=item B<width> => I<n> | I<[ n, m, ... ]>
 
 Specify folding width.  Negative value means all the rest.
 
 Array reference can be specified but works only with B<chops> method,
 and retunrs empty string for zero width.
 
-=item B<boundary> => C<word> or C<space>
+=item B<boundary> => C<word> | C<space>
 
 Option B<boundary> takes C<word> and C<space> as a valid value.  These
 prohibit to fold a line in the middle of ASCII/Latin sequence.  Value
