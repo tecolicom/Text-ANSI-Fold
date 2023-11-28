@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.2102";
+our $VERSION = "2.2103";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -557,7 +557,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.2102
+Version 2.2103
 
 =head1 SYNOPSIS
 
@@ -721,7 +721,7 @@ function as well as B<new> and B<configure> method.
 
 =item B<width> => I<n> | I<[ n, m, ... ]>
 
-Specify folding width.  Negative value means all the rest.
+Specify folding width by integer.  Negative value means all the rest.
 
 Array reference can be specified but works only with B<chops> method,
 and retunrs empty string for zero width.
@@ -957,7 +957,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2018-2023 Kazumasa Utashiro.
+Copyright ©︎ 2018-2023 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
