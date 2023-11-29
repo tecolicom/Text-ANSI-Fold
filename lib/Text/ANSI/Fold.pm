@@ -468,7 +468,7 @@ sub fold {
 }
 
 ##
-## Trim off one or more *logical* characters from the top.
+## Trim off one or more *logical* characters from the beginning of a line
 ##
 sub simple_fold {
     my $orig = shift;
@@ -478,16 +478,13 @@ sub simple_fold {
     my($left, $right) = $orig =~ m/^(\X{0,$width}+)(.*)/
 	or croak "$width: unexpected width";
 
-    my $w = vwidth($left);
+    my $w = vwidth $left;
     while ($w > $width) {
-	my $trim = do {
-	    # use POSIX qw(ceil);
-	    # ceil(($w - $width) / 2) || 1;
-	    int(($w - $width) / 2 + 0.5) || 1;
-	};
+	use integer;
+	my $trim = ($w - $width + 1) / 2;
 	$left =~ s/\X \K ( \X{$trim} ) \z//x or last;
 	$right = $1 . $right;
-	$w -= vwidth($1);
+	$w -= vwidth $1;
     }
 
     ($left, $right, $w);
