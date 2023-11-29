@@ -276,7 +276,7 @@ sub fold {
 	    { word => $alphanum_re, space => $nonspace_re }
 	    ->{$opt->{boundary} // ''};
 
-    $Text::VisualWidth::PP::EastAsian = $opt->{ambiguous} eq 'wide';
+    local $Text::VisualWidth::PP::EastAsian = $opt->{ambiguous} eq 'wide';
 
     my $folded = '';
     my $eol = '';
