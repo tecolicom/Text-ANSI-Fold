@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.2104";
+our $VERSION = "2.22";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -562,7 +562,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.2104
+Version 2.22
 
 =head1 SYNOPSIS
 
@@ -969,7 +969,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright ©︎ 2018-2023 Kazumasa Utashiro.
+Copyright ©︎ 2018-2024 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
