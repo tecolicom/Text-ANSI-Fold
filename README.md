@@ -276,16 +276,18 @@ function as well as **new** and **configure** method.
 
     Currently these names are available.
 
-        symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
-                    "\N{SYMBOL FOR SPACE}" ],
-        shade  => [ "\N{MEDIUM SHADE}",
-                    "\N{LIGHT SHADE}" ],
-        block  => [ "\N{LOWER ONE QUARTER BLOCK}",
-                    "\N{LOWER ONE EIGHTH BLOCK}" ],
-        bar    => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
-                    "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
-        dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
-                    "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
+        symbol   => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
+                      "\N{SYMBOL FOR SPACE}" ],
+        shade    => [ "\N{MEDIUM SHADE}",
+                      "\N{LIGHT SHADE}" ],
+        block    => [ "\N{LOWER ONE QUARTER BLOCK}",
+                      "\N{LOWER ONE EIGHTH BLOCK}" ],
+        pin      => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+                      "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
+        dash     => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+                      "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
+        triangle => [ "\N{BLACK RIGHT-POINTING SMALL TRIANGLE}",
+                      "\N{WHITE RIGHT-POINTING SMALL TRIANGLE}" ],
 
     Below are styles providing same character for both tabhead and
     tabspace.
@@ -293,6 +295,7 @@ function as well as **new** and **configure** method.
         dot          => '.',
         space        => ' ',
         emspace      => "\N{EM SPACE}",
+        blank        => "\N{OPEN BOX}",
         middle-dot   => "\N{MIDDLE DOT}",
         arrow        => "\N{RIGHTWARDS ARROW}",
         double-arrow => "\N{RIGHTWARDS DOUBLE ARROW}",

@@ -120,20 +120,23 @@ our %TABSTYLE = (
     pairmap {
 	( $a =~ s/_/-/gr => ref $b ? $b : [ $b, $b ] );
     }
-    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",			    # ␉
-		"\N{SYMBOL FOR SPACE}" ],				    # ␠
-    shade  => [ "\N{MEDIUM SHADE}",					    # ▒
-		"\N{LIGHT SHADE}" ],					    # ░
-    block  => [ "\N{LOWER ONE QUARTER BLOCK}",				    # ▂
-		"\N{LOWER ONE EIGHTH BLOCK}" ],				    # ▁
-    bar    => [ "\N{BOX DRAWINGS HEAVY RIGHT}",				    # ╺
-		"\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],			    # ─
-    dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",				    # ╺
-		"\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],	    # ╌
+    symbol   => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",		    # ␉
+		  "\N{SYMBOL FOR SPACE}" ],				    # ␠
+    shade    => [ "\N{MEDIUM SHADE}",					    # ▒
+		  "\N{LIGHT SHADE}" ],					    # ░
+    block    => [ "\N{LOWER ONE QUARTER BLOCK}",			    # ▂
+		  "\N{LOWER ONE EIGHTH BLOCK}" ],			    # ▁
+    pin      => [ "\N{BOX DRAWINGS HEAVY RIGHT}",			    # ╺
+		  "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],		    # ─
+    dash     => [ "\N{BOX DRAWINGS HEAVY RIGHT}",			    # ╺
+		  "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],	    # ╌
+    triangle => [ "\N{BLACK RIGHT-POINTING SMALL TRIANGLE}",		    # ▸
+		  "\N{WHITE RIGHT-POINTING SMALL TRIANGLE}" ],		    # ▹
 
     dot          => '.',
     space        => ' ',
     emspace      => "\N{EM SPACE}",					    #  
+    blank        => "\N{OPEN BOX}",					    # ␣
     middle_dot   => "\N{MIDDLE DOT}",					    # ·
     arrow        => "\N{RIGHTWARDS ARROW}",				    # →
     double_arrow => "\N{RIGHTWARDS DOUBLE ARROW}",			    # ⇒
@@ -149,6 +152,10 @@ our %TABSTYLE = (
     cuneiform    => "\N{CUNEIFORM SIGN TAB}",				    # 𒋰
 
     );
+
+for my $alias ([ bar => 'pin']) {
+    $TABSTYLE{$alias->[0]} = $TABSTYLE{$alias->[1]};
+}
 
 my @default = (
     text      => '',
@@ -832,16 +839,18 @@ C<symbols>'s tabhead and C<space>'s tabspace.
 
 Currently these names are available.
 
-    symbol => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
-                "\N{SYMBOL FOR SPACE}" ],
-    shade  => [ "\N{MEDIUM SHADE}",
-                "\N{LIGHT SHADE}" ],
-    block  => [ "\N{LOWER ONE QUARTER BLOCK}",
-                "\N{LOWER ONE EIGHTH BLOCK}" ],
-    bar    => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
-                "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
-    dash   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
-                "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
+    symbol   => [ "\N{SYMBOL FOR HORIZONTAL TABULATION}",
+                  "\N{SYMBOL FOR SPACE}" ],
+    shade    => [ "\N{MEDIUM SHADE}",
+                  "\N{LIGHT SHADE}" ],
+    block    => [ "\N{LOWER ONE QUARTER BLOCK}",
+                  "\N{LOWER ONE EIGHTH BLOCK}" ],
+    pin      => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+                  "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
+    dash     => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+                  "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
+    triangle => [ "\N{BLACK RIGHT-POINTING SMALL TRIANGLE}",
+		  "\N{WHITE RIGHT-POINTING SMALL TRIANGLE}" ],
 
 Below are styles providing same character for both tabhead and
 tabspace.
@@ -849,6 +858,7 @@ tabspace.
     dot          => '.',
     space        => ' ',
     emspace      => "\N{EM SPACE}",
+    blank        => "\N{OPEN BOX}",
     middle-dot   => "\N{MIDDLE DOT}",
     arrow        => "\N{RIGHTWARDS ARROW}",
     double-arrow => "\N{RIGHTWARDS DOUBLE ARROW}",
