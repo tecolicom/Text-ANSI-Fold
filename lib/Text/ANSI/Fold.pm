@@ -771,6 +771,10 @@ B<chops> interface.
 If the value is reference to subroutine, its result is used as a
 prefix string.
 
+The B<fold> function does not complain if the result of adding a
+prefix string is longer than the original text.  The caller must be
+very careful because of the possibility of an infinite loop.
+
 =item B<ambiguous> => C<narrow> or C<wide>
 
 Tells how to treat Unicode East Asian ambiguous characters.  Default

@@ -213,6 +213,10 @@ function as well as **new** and **configure** method.
     If the value is reference to subroutine, its result is used as a
     prefix string.
 
+    The **fold** function does not complain if the result of adding a
+    prefix string is longer than the original text.  The caller must be
+    very careful because of the possibility of an infinite loop.
+
 - **ambiguous** => `narrow` or `wide`
 
     Tells how to treat Unicode East Asian ambiguous characters.  Default
