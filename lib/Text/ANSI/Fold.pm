@@ -461,6 +461,7 @@ sub fold {
     if ($opt->{padding} and $room > 0) {
 	my $padding = $opt->{padchar} x $room;
 	if (@bg_stack) {
+	    $padding .= $opt->{padchar} x $opt->{runin} if $opt->do_runin;
 	    $padding = join '', @bg_stack, $padding, SGR_RESET;
 	}
 	$folded .= $padding;
