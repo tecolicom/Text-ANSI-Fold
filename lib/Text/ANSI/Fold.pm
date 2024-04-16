@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.22";
+our $VERSION = "2.23";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -126,7 +126,7 @@ our %TABSTYLE = (
 		  "\N{LIGHT SHADE}" ],					    # ░
     block    => [ "\N{LOWER ONE QUARTER BLOCK}",			    # ▂
 		  "\N{LOWER ONE EIGHTH BLOCK}" ],			    # ▁
-    pin      => [ "\N{BOX DRAWINGS HEAVY RIGHT}",			    # ╺
+    needle   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",			    # ╺
 		  "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],		    # ─
     dash     => [ "\N{BOX DRAWINGS HEAVY RIGHT}",			    # ╺
 		  "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],	    # ╌
@@ -153,7 +153,10 @@ our %TABSTYLE = (
 
     );
 
-for my $alias ([ bar => 'pin']) {
+for my $alias (
+    [ bar => 'needle'],
+    [ pin => 'needle']
+) {
     $TABSTYLE{$alias->[0]} = $TABSTYLE{$alias->[1]};
 }
 
@@ -562,7 +565,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.22
+Version 2.23
 
 =head1 SYNOPSIS
 
@@ -850,7 +853,7 @@ Currently these names are available.
                   "\N{LIGHT SHADE}" ],
     block    => [ "\N{LOWER ONE QUARTER BLOCK}",
                   "\N{LOWER ONE EIGHTH BLOCK}" ],
-    pin      => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+    needle   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
                   "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
     dash     => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
                   "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],

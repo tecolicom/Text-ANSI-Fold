@@ -5,7 +5,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 # VERSION
 
-Version 2.22
+Version 2.23
 
 # SYNOPSIS
 
@@ -286,7 +286,7 @@ function as well as **new** and **configure** method.
                       "\N{LIGHT SHADE}" ],
         block    => [ "\N{LOWER ONE QUARTER BLOCK}",
                       "\N{LOWER ONE EIGHTH BLOCK}" ],
-        pin      => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
+        needle   => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
                       "\N{BOX DRAWINGS LIGHT HORIZONTAL}" ],
         dash     => [ "\N{BOX DRAWINGS HEAVY RIGHT}",
                       "\N{BOX DRAWINGS LIGHT DOUBLE DASH HORIZONTAL}" ],
