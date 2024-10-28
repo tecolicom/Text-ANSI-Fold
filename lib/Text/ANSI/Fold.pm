@@ -298,7 +298,7 @@ sub fold {
     while (length) {
 
 	# newline
-	if (s/\A(\r*\n)//) {
+	if (s/\A(\R)//) {
 	    $eol = $1;
 	    last;
 	}
