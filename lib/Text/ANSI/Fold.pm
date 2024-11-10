@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.23";
+our $VERSION = "2.24";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -570,7 +570,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.23
+Version 2.24
 
 =head1 SYNOPSIS
 
@@ -654,7 +654,7 @@ L<Text::ANSI::Fold::Util>.
 =head1 OBJECT INTERFACE
 
 You can create an object to hold parameters, which is effective during
-object life time.  For example, 
+object life time.  For example,
 
     my $f = Text::ANSI::Fold->new(
         width => 80,

@@ -5,7 +5,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 # VERSION
 
-Version 2.23
+Version 2.24
 
 # SYNOPSIS
 
@@ -89,7 +89,7 @@ Some other easy-to-use interfaces are provided by sister module
 # OBJECT INTERFACE
 
 You can create an object to hold parameters, which is effective during
-object life time.  For example, 
+object life time.  For example,
 
     my $f = Text::ANSI::Fold->new(
         width => 80,
