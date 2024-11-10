@@ -302,9 +302,14 @@ sub fold {
 	    $eol = $1;
 	    last;
 	}
-	# formfeed / carriage return
-	if (s/\A([\f\r]+)//) {
-	    last if length == 0;
+	# formfeed
+	if (/\A(\f+)(.*)/s) {
+	    last if length $folded;
+	    ($folded, $_) = ($1, $2);
+	    next;
+	}
+	# carriage return
+	if (s/\A(\r+)//) {
 	    $folded .= $1;
 	    $room = $width;
 	    next;
