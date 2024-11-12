@@ -30,7 +30,7 @@ Version 2.24
         linebreak => LINEBREAK_ALL,
         runin     => 4,
         runout    => 4,
-        );
+    );
 
 # DESCRIPTION
 

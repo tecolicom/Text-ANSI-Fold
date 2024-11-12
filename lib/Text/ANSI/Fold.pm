@@ -298,14 +298,16 @@ sub fold {
     while (length) {
 
 	# newline
-	if (s/\A(\r*\n)//) {
+	# U+2028: Line Separator
+	# U+2029: Paragraph Separator
+	if (s/\A(\r*\n|[\N{U+2028}\N{U+2029}])//) {
 	    $eol = $1;
 	    last;
 	}
 	# formfeed
-	if (/\A(\f+)(.*)/s) {
+	if (/\A(\f+)/p) {
 	    last if length $folded;
-	    ($folded, $_) = ($1, $2);
+	    ($folded, $_) = ($1, ${^POSTMATCH});
 	    next;
 	}
 	# carriage return
@@ -595,7 +597,7 @@ Version 2.24
         linebreak => LINEBREAK_ALL,
         runin     => 4,
         runout    => 4,
-        );
+    );
 
 =head1 DESCRIPTION
 
