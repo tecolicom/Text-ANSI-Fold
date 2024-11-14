@@ -339,6 +339,42 @@ text with Japanese prohibited character handling.
         print $fold->text($_)->chops;
     }
 
+# CONTROL CHARACTERS
+
+Text::ANSI::Fold handles the following line break related codes
+specially:
+
+    Newline (\n)
+    Form feed (\f)
+    Carriage return (\r)
+    Null (\0)
+    Line separator (U+2028)
+    Paragraph separator (U+2029)
+
+These characters are handled as follows:
+
+- NEWLINE (`\n`), CRNL (`\r\n`)
+- NULL (`\0`)
+- LINE SEPARATOR (`U+2028`)
+- PARAGRAPH SEPARATOR (`U+2029`)
+
+    If any of these characters are found, the folding process terminates
+    immediately and the portion up to that character is returned as folded
+    text.  These character itself is included at the end of the folded
+    text.
+
+- CARRIAGE RETURN (`\r`)
+
+    When a carriage return is found, it is added to the folded text and
+    the fold width is reset.
+
+- FORM FEED (`\f`)
+
+    If a form feed character is found in the middle of a string,
+    processing stops and the string up to the point immediately before is
+    returned.  If it is found at the beginning of a string, it is added to
+    the folded text and processing continues.
+
 # SEE ALSO
 
 - [https://github.com/tecolicom/ANSI-Tools](https://github.com/tecolicom/ANSI-Tools)

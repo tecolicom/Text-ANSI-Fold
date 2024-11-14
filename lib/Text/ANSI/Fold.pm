@@ -915,6 +915,49 @@ text with Japanese prohibited character handling.
         print $fold->text($_)->chops;
     }
 
+=head1 CONTROL CHARACTERS
+
+Text::ANSI::Fold handles the following line break related codes
+specially:
+
+    Newline (\n)
+    Form feed (\f)
+    Carriage return (\r)
+    Null (\0)
+    Line separator (U+2028)
+    Paragraph separator (U+2029)
+
+These characters are handled as follows:
+
+=over 4
+
+=item NEWLINE (C<\n>), CRNL (C<\r\n>)
+
+=item NULL (C<\0>)
+
+=item LINE SEPARATOR (C<U+2028>)
+
+=item PARAGRAPH SEPARATOR (C<U+2029>)
+
+If any of these characters are found, the folding process terminates
+immediately and the portion up to that character is returned as folded
+text.  These character itself is included at the end of the folded
+text.
+
+=item CARRIAGE RETURN (C<\r>)
+
+When a carriage return is found, it is added to the folded text and
+the fold width is reset.
+
+=item FORM FEED (C<\f>)
+
+If a form feed character is found in the middle of a string,
+processing stops and the string up to the point immediately before is
+returned.  If it is found at the beginning of a string, it is added to
+the folded text and processing continues.
+
+=back
+
 =head1 SEE ALSO
 
 =over 7
