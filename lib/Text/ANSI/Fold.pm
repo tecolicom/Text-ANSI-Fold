@@ -617,6 +617,8 @@ Since the overhead of ANSI escape sequence handling is not significant
 when the data does not include them, this module can be used for
 normal text processing with small penalty.
 
+=head2 B<ansi_fold>
+
 Use exported B<ansi_fold> function to fold original text, with number
 of visual columns you want to cut off the text.
 
@@ -637,6 +639,8 @@ This function returns at least one character in any situation.  If you
 provide Asian wide string and just one column as width, it trims off
 the first wide character even if it does not fit to given width.
 
+=head2 B<configure>
+
 Default parameter can be set by B<configure> class method:
 
     Text::ANSI::Fold->configure(width => 80, padding => 1);
@@ -656,49 +660,74 @@ L<Text::ANSI::Fold::Util>.
 =head1 OBJECT INTERFACE
 
 You can create an object to hold parameters, which is effective during
-object life time.  For example,
+object life time.
 
-    my $f = Text::ANSI::Fold->new(
+=head2 B<new>
+
+Use C<new> method to make a fold object.
+
+    my $obj = Text::ANSI::Fold->new(
         width => 80,
         boundary => 'word',
-        );
+    );
 
-makes an object folding on word boundaries with 80 columns width.
-Then you can use this without parameters.
+This makes an object folding on word boundaries with 80 columns width.
 
-    $f->fold($text);
+=head2 B<fold>
+
+Then you can call C<fold> method without parameters because the object
+keeps necessary information.
+
+    $obj->fold($text);
+
+=head2 B<configure>
 
 Use B<configure> method to update parameters:
 
-    $f->configure(padding => 1);
+    $obj->configure(padding => 1);
 
 Additional parameter can be specified on each call, and they precede
 saved value.
 
-    $f->fold($text, width => 40);
+    $obj->fold($text, width => 40);
 
 =head1 STRING OBJECT INTERFACE
 
+You can use a fold object to hold string inside, and take out folded
+strings from it.  Use C<text> method to store data in the object, and
+C<retrieve> or C<chops> method to take out folded string from it.
+
+=head2 B<text>
+
 A fold object can hold string inside by B<text> method.
 
-    $f->text("text");
+    $obj->text("text");
 
-And folded string can be taken by B<retrieve> method.  It returns
+Method B<text> has an lvalue attribute, so it can be assigned to, as
+well as can be a subject of mutating operator such as C<s///>.
+
+    $obj->text = "text";
+
+=head2 B<retrieve>
+
+Folded string can be taken out by C<retrieve> method.  It returns
 empty string if nothing remained.
 
-    while ((my $folded = $f->retrieve) ne '') {
+    while ((my $folded = $obj->retrieve) ne '') {
         print $folded;
         print "\n" if $folded !~ /\n\z/;
     }
 
-Method B<chops> returns chopped string list.  Because the B<text>
+=head2 B<chops>
+
+Method C<chops> returns chopped string list.  Because the C<text>
 method returns the object itself when called with a parameter, you can
-use B<text> and B<chops> in series:
+use C<text> and C<chops> in series:
 
-    print join "\n", $f->text($string)->chops;
+    print join "\n", $obj->text($string)->chops;
 
-Actually, text can be set by B<new> or B<configure> method through
-B<text> parameter.  Next program just works.
+Actually, text can be set by c<new> or C<configure> method through
+C<text> parameter.  Next program just works.
 
     use Text::ANSI::Fold;
     while (<>) {
@@ -706,7 +735,9 @@ B<text> parameter.  Next program just works.
             Text::ANSI::Fold->new(width => 40, text => $_)->chops;
     }
 
-When using B<chops> method, B<width> parameter can take array
+=head2 B<chops> with multiple width
+
+When using C<chops> method, C<width> parameter can take array
 reference, and chops text into given width list.
 
     my $fold = Text::ANSI::Fold->new;
@@ -714,10 +745,13 @@ reference, and chops text into given width list.
     # return ("1", "22", "333") and keep "4444"
 
 If the width value is 0, it returns empty string.  Negative width
-value takes all the rest of stored string.
+value takes all the rest of stored string.  In the following code, the
+fourth width (3) is ignored because the -2 immediately preceding it
+consumes all remaining strings.
 
-Method B<text> has an lvalue attribute, so it can be assigned to, as
-well as can be a subject of mutating operator such as C<s///>.
+    my $fold = Text::ANSI::Fold->new;
+    my @list = $fold->text("1223334444")->chops(width => [ 1, 0, -2, 3 ]);
+    # return ("1", "", "223334444")
 
 =head1 OPTIONS
 
@@ -728,9 +762,9 @@ function as well as B<new> and B<configure> method.
 
     Text::ANSI::Fold->configure(boundary => 'word');
 
-    my $f = Text::ANSI::Fold->new(boundary => 'word');
+    my $obj = Text::ANSI::Fold->new(boundary => 'word');
 
-    $f->configure(boundary => 'word');
+    $obj->configure(boundary => 'word');
 
 =over 7
 

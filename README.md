@@ -50,6 +50,8 @@ Since the overhead of ANSI escape sequence handling is not significant
 when the data does not include them, this module can be used for
 normal text processing with small penalty.
 
+## **ansi\_fold**
+
 Use exported **ansi\_fold** function to fold original text, with number
 of visual columns you want to cut off the text.
 
@@ -70,6 +72,8 @@ This function returns at least one character in any situation.  If you
 provide Asian wide string and just one column as width, it trims off
 the first wide character even if it does not fit to given width.
 
+## **configure**
+
 Default parameter can be set by **configure** class method:
 
     Text::ANSI::Fold->configure(width => 80, padding => 1);
@@ -89,49 +93,74 @@ Some other easy-to-use interfaces are provided by sister module
 # OBJECT INTERFACE
 
 You can create an object to hold parameters, which is effective during
-object life time.  For example,
+object life time.
 
-    my $f = Text::ANSI::Fold->new(
+## **new**
+
+Use `new` method to make a fold object.
+
+    my $obj = Text::ANSI::Fold->new(
         width => 80,
         boundary => 'word',
-        );
+    );
 
-makes an object folding on word boundaries with 80 columns width.
-Then you can use this without parameters.
+This makes an object folding on word boundaries with 80 columns width.
 
-    $f->fold($text);
+## **fold**
+
+Then you can call `fold` method without parameters because the object
+keeps necessary information.
+
+    $obj->fold($text);
+
+## **configure**
 
 Use **configure** method to update parameters:
 
-    $f->configure(padding => 1);
+    $obj->configure(padding => 1);
 
 Additional parameter can be specified on each call, and they precede
 saved value.
 
-    $f->fold($text, width => 40);
+    $obj->fold($text, width => 40);
 
 # STRING OBJECT INTERFACE
 
+You can use a fold object to hold string inside, and take out folded
+strings from it.  Use `text` method to store data in the object, and
+`retrieve` or `chops` method to take out folded string from it.
+
+## **text**
+
 A fold object can hold string inside by **text** method.
 
-    $f->text("text");
+    $obj->text("text");
 
-And folded string can be taken by **retrieve** method.  It returns
+Method **text** has an lvalue attribute, so it can be assigned to, as
+well as can be a subject of mutating operator such as `s///`.
+
+    $obj->text = "text";
+
+## **retrieve**
+
+Folded string can be taken out by `retrieve` method.  It returns
 empty string if nothing remained.
 
-    while ((my $folded = $f->retrieve) ne '') {
+    while ((my $folded = $obj->retrieve) ne '') {
         print $folded;
         print "\n" if $folded !~ /\n\z/;
     }
 
-Method **chops** returns chopped string list.  Because the **text**
+## **chops**
+
+Method `chops` returns chopped string list.  Because the `text`
 method returns the object itself when called with a parameter, you can
-use **text** and **chops** in series:
+use `text` and `chops` in series:
 
-    print join "\n", $f->text($string)->chops;
+    print join "\n", $obj->text($string)->chops;
 
-Actually, text can be set by **new** or **configure** method through
-**text** parameter.  Next program just works.
+Actually, text can be set by c&lt;new> or `configure` method through
+`text` parameter.  Next program just works.
 
     use Text::ANSI::Fold;
     while (<>) {
@@ -139,7 +168,9 @@ Actually, text can be set by **new** or **configure** method through
             Text::ANSI::Fold->new(width => 40, text => $_)->chops;
     }
 
-When using **chops** method, **width** parameter can take array
+## **chops** with multiple width
+
+When using `chops` method, `width` parameter can take array
 reference, and chops text into given width list.
 
     my $fold = Text::ANSI::Fold->new;
@@ -147,10 +178,13 @@ reference, and chops text into given width list.
     # return ("1", "22", "333") and keep "4444"
 
 If the width value is 0, it returns empty string.  Negative width
-value takes all the rest of stored string.
+value takes all the rest of stored string.  In the following code, the
+fourth width (3) is ignored because the -2 immediately preceding it
+consumes all remaining strings.
 
-Method **text** has an lvalue attribute, so it can be assigned to, as
-well as can be a subject of mutating operator such as `s///`.
+    my $fold = Text::ANSI::Fold->new;
+    my @list = $fold->text("1223334444")->chops(width => [ 1, 0, -2, 3 ]);
+    # return ("1", "", "223334444")
 
 # OPTIONS
 
@@ -161,9 +195,9 @@ function as well as **new** and **configure** method.
 
     Text::ANSI::Fold->configure(boundary => 'word');
 
-    my $f = Text::ANSI::Fold->new(boundary => 'word');
+    my $obj = Text::ANSI::Fold->new(boundary => 'word');
 
-    $f->configure(boundary => 'word');
+    $obj->configure(boundary => 'word');
 
 - **width** => _n_ | _\[ n, m, ... \]_
 
