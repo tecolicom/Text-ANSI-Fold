@@ -16,15 +16,15 @@ is_deeply(chops($fold),
 	  [ "12345", "67890\n", "12345", "67890\n" ],
 	  "newline");
 
-$fold->configure(text => "1234567890\N{U+2028}1234567890\N{U+2029}", width => 5);
+$fold->configure(text => "1234567890\o{0}1234567890\N{U+2028}1234567890\N{U+2029}", width => 5);
 is_deeply(chops($fold),
-	  [ "12345", "67890\N{U+2028}", "12345", "67890\N{U+2029}" ],
-	  "line/paragraph separator");
+	  [ "12345", "67890\0", "12345", "67890\N{U+2028}", "12345", "67890\N{U+2029}" ],
+	  "null and line/paragraph separator");
 
-$fold->configure(text => "\n\N{U+2028}\n\n\N{U+2029}\n", width => 5);
+$fold->configure(text => "\n\0\n\n\N{U+2028}\n\n\N{U+2029}\n", width => 5);
 is_deeply(chops($fold),
-	  [ "\n", "\N{U+2028}", "\n", "\n", "\N{U+2029}", "\n" ],
-	  "newline & line/paragraph separator");
+	  [ "\n", "\0", "\n", "\n", "\N{U+2028}", "\n", "\n", "\N{U+2029}", "\n" ],
+	  "newline & null, line/paragraph separator");
 
 $fold->configure(text => "a\rb", width => 5);
 is_deeply(chops($fold),

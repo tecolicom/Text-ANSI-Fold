@@ -297,14 +297,14 @@ sub fold {
   FOLD:
     while (length) {
 
-	# newline
+	# newline, null
 	# U+2028: Line Separator
 	# U+2029: Paragraph Separator
-	if (s/\A(\r*\n|[\N{U+2028}\N{U+2029}])//) {
+	if (s/\A(\r*\n|[\0\N{U+2028}\N{U+2029}])//) {
 	    $eol = $1;
 	    last;
 	}
-	# formfeed
+	# form feed
 	if (/\A(\f+)/p) {
 	    last if length $folded;
 	    ($folded, $_) = ($1, ${^POSTMATCH});
