@@ -292,7 +292,9 @@ sub fold {
     my $eol = '';
     my $room = $width;
     @bg_stack = @color_stack = @reset = ();
-    my $yield_re = $opt->{expand} ? qr/[^\e\n\f\r\t]/ : qr/[^\e\n\f\r]/;
+    my $unremarkable_re =
+	$opt->{expand} ? qr/[^\e\n\f\r\0\N{U+2028}\N{U+2029}\t]/
+		       : qr/[^\e\n\f\r\0\N{U+2028}\N{U+2029}]/;
 
   FOLD:
     while (length) {
@@ -375,7 +377,7 @@ sub fold {
 	}
 	next if $bs;
 
-	if (s/\A(\e+|(?:${yield_re}(?!\cH))+)//) {
+	if (s/\A(\e+|(?:${unremarkable_re}(?!\cH))+)//) {
 	    my $s = $1;
 	    if ((my $w = vwidth($s)) <= $room) {
 		$folded .= $s;
