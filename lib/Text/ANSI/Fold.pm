@@ -4,7 +4,7 @@ use v5.14;
 use warnings;
 use utf8;
 
-our $VERSION = "2.24";
+our $VERSION = "2.25";
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -569,7 +569,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 =head1 VERSION
 
-Version 2.24
+Version 2.25
 
 =head1 SYNOPSIS
 
@@ -939,7 +939,7 @@ text with Japanese prohibited character handling.
         linebreak => LINEBREAK_ALL,
         runin     => 4,
         runout    => 4,
-        );
+    );
     
     $, = "\n";
     while (<>) {

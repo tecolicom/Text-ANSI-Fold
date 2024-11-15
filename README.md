@@ -5,7 +5,7 @@ Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and As
 
 # VERSION
 
-Version 2.24
+Version 2.25
 
 # SYNOPSIS
 
@@ -366,7 +366,7 @@ text with Japanese prohibited character handling.
         linebreak => LINEBREAK_ALL,
         runin     => 4,
         runout    => 4,
-        );
+    );
     
     $, = "\n";
     while (<>) {
