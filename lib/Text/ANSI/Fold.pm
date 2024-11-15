@@ -307,7 +307,7 @@ sub fold {
 	    last;
 	}
 	# form feed
-	if (/\A(\f+)/p) {
+	if (m/\A(\f+)/p) {
 	    last if length $folded;
 	    ($folded, $_) = ($1, ${^POSTMATCH});
 	    next;
@@ -359,24 +359,19 @@ sub fold {
 
 	# backspace
 	my $bs = 0;
-	while (s/\A(?:\X\cH+)++(?<c>\X|\z)//p) {
+	while (m/\A(?:\X\cH+)++(?<c>\X|\z)/p) {
 	    my $w = vwidth($+{c});
-	    if ($w > $room) {
-		if ($folded eq '') {
-		    $folded .= ${^MATCH};
-		    $room -= $w;
-		} else {
-		    $_ = ${^MATCH} . $_;
-		}
-		last FOLD;
-	    }
+	    last FOLD if $w > $room and $room != $width;
 	    $folded .= ${^MATCH};
+	    $_ = ${^POSTMATCH};
 	    $room -= $w;
 	    $bs++;
-	    last if $room < 1;
+	    last FOLD if $room < 0;
+	    last      if $room < 1;
 	}
 	next if $bs;
 
+	# consume unremarkable characters
 	if (s/\A(\e+|(?:${unremarkable_re}(?!\cH))+)//) {
 	    my $s = $1;
 	    if ((my $w = vwidth($s)) <= $room) {
