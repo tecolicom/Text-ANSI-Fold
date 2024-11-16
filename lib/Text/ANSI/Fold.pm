@@ -267,6 +267,14 @@ sub pop_reset {
 
 use constant MAX_INT => ~0 >> 1;
 
+sub IsEOL {
+    <<"END";
+0000\t0000
+000A\t000D
+2028\t2029
+END
+}
+
 sub fold {
     my $obj = shift;
     local $_ = shift // '';
@@ -293,16 +301,16 @@ sub fold {
     my $room = $width;
     @bg_stack = @color_stack = @reset = ();
     my $unremarkable_re =
-	$opt->{expand} ? qr/[^\e\n\f\r\0\N{U+2028}\N{U+2029}\t]/
-		       : qr/[^\e\n\f\r\0\N{U+2028}\N{U+2029}]/;
+	$opt->{expand} ? qr/[^\p{IsEOL}\e\t]/
+		       : qr/[^\p{IsEOL}\e]/;
 
   FOLD:
     while (length) {
 
-	# newline, null
+	# newline, null, vt
 	# U+2028: Line Separator
 	# U+2029: Paragraph Separator
-	if (s/\A(\r*\n|[\0\N{U+2028}\N{U+2029}])//) {
+	if (s/\A(\r*\n|[\0\x0b\N{U+2028}\N{U+2029}])//) {
 	    $eol = $1;
 	    last;
 	}
