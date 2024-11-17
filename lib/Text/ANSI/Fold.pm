@@ -287,7 +287,8 @@ sub fold {
     my $width = $opt->{width};
     looks_like_number $width and $width == int($width)
 	or croak "$width: invalid width";
-    $width = MAX_INT if $width < 0;
+    $opt->{padding} = 0 if $width <= 0;
+    $width = MAX_INT    if $width <  0;
     ($width -= $opt->{margin}) > 0 or croak "margin too big";
 
     my $word_char_re =
