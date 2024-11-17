@@ -759,6 +759,10 @@ consumes all remaining strings.
     my @list = $fold->text("1223334444")->chops(width => [ 1, 0, -2, 3 ]);
     # return ("1", "", "223334444")
 
+The padding operation is performed only on the last non-empty element,
+and no elements corresponding to subsequent items are returned.  Also,
+of course, padding is not performed for negative widths.
+
 =head1 OPTIONS
 
 Option parameter can be specified as name-value list for B<ansi_fold>
