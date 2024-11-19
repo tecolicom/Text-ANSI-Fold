@@ -177,6 +177,7 @@ my @default = (
     tabhead   => ' ',
     tabspace  => ' ',
     discard   => {},
+    crack     => 0,
     );
 
 sub new {
@@ -392,6 +393,12 @@ sub fold {
 	    if ($w > $room and $room < $width) {
 		$_ = $s . $_;
 		last;
+	    }
+	    if ($opt->{crack} && $w == $room - 1 && $b =~ /\A(\p{IsWideSpacing})/p) {
+		# split in the middle of a full-width character
+		$a .= "\N{NO-BREAK SPACE}";
+		$b  = "\N{NO-BREAK SPACE}" . ${^POSTMATCH};
+		$w++;
 	    }
 	    ($folded, $_) = ($folded . $a, $b . $_);
 	    $room -= $w;
@@ -871,6 +878,13 @@ Import-tag C<:constants> can be used to access these constants.
 
 Option B<runin> and B<runout> is used to set maximum width of moving
 characters.  Default values are both 2.
+
+=item B<crack> => I<bool>
+
+It is sometimes necessary to split a string at the middle of a wide
+character.  In such cases, the string is usually split before that
+point.  If this parameter is true, that wide character is split into
+two NO-BREAK SPACEs.
 
 =item B<expand> => I<bool>
 

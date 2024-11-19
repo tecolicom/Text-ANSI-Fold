@@ -295,6 +295,13 @@ function as well as **new** and **configure** method.
     Option **runin** and **runout** is used to set maximum width of moving
     characters.  Default values are both 2.
 
+- **crack** => _bool_
+
+    It is sometimes necessary to split a string at the middle of a wide
+    character.  In such cases, the string is usually split before that
+    point.  If this parameter is true, that wide character is split into
+    two NO-BREAK SPACEs.
+
 - **expand** => _bool_
 - **tabstop** => _n_
 - **tabhead** => _char_
