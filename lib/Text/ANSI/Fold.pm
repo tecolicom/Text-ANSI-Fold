@@ -178,6 +178,8 @@ my @default = (
     tabspace  => ' ',
     discard   => {},
     crack     => 0,
+    lefthalf  => "\N{NO-BREAK SPACE}",
+    righthalf => "\N{NO-BREAK SPACE}",
     );
 
 sub new {
@@ -390,14 +392,15 @@ sub fold {
 		next;
 	    }
 	    my($a, $b, $w) = simple_fold($s, $room);
-	    if ($w > $room and $room < $width) {
+	    if ($w > $room && $room < $width) {
+		# $w == 2 && $room == 1
 		$_ = $s . $_;
 		last;
 	    }
 	    if ($opt->{crack} && $w == $room - 1 && $b =~ /\A(\p{IsWideSpacing})/p) {
 		# split in the middle of a full-width character
-		$a .= "\N{NO-BREAK SPACE}";
-		$b  = "\N{NO-BREAK SPACE}" . ${^POSTMATCH};
+		$a .= $opt->{lefthalf};
+		$b  = $opt->{righthalf} . ${^POSTMATCH};
 		$w++;
 	    }
 	    ($folded, $_) = ($folded . $a, $b . $_);
@@ -881,10 +884,17 @@ characters.  Default values are both 2.
 
 =item B<crack> => I<bool>
 
+=item B<lefthalf> => I<char>
+
+=item B<righthalf> => I<char>
+
 It is sometimes necessary to split a string at the middle of a wide
 character.  In such cases, the string is usually split before that
 point.  If this parameter is true, that wide character is split into
-two NO-BREAK SPACEs.
+left-half and right-half character.
+
+The parameters C<lefthalf> and C<righthalf> specify the respective
+characters. Their default value is both C<NON-BREAK SPACE>.
 
 =item B<expand> => I<bool>
 

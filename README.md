@@ -296,11 +296,16 @@ function as well as **new** and **configure** method.
     characters.  Default values are both 2.
 
 - **crack** => _bool_
+- **lefthalf** => _char_
+- **righthalf** => _char_
 
     It is sometimes necessary to split a string at the middle of a wide
     character.  In such cases, the string is usually split before that
     point.  If this parameter is true, that wide character is split into
-    two NO-BREAK SPACEs.
+    left-half and right-half character.
+
+    The parameters `lefthalf` and `righthalf` specify the respective
+    characters. Their default value is both `NON-BREAK SPACE`.
 
 - **expand** => _bool_
 - **tabstop** => _n_
