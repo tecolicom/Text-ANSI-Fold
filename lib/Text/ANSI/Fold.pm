@@ -177,7 +177,7 @@ my @default = (
     tabhead   => ' ',
     tabspace  => ' ',
     discard   => {},
-    crack     => 0,
+    crackwide => 0,
     lefthalf  => "\N{NO-BREAK SPACE}",
     righthalf => "\N{NO-BREAK SPACE}",
     );
@@ -397,7 +397,7 @@ sub fold {
 		$_ = $s . $_;
 		last;
 	    }
-	    if ($opt->{crack} && $w == $room - 1 && $b =~ /\A(\p{IsWideSpacing})/p) {
+	    if ($opt->{crackwide} && $w == $room - 1 && $b =~ /\A(\p{IsWideSpacing})/p) {
 		# split in the middle of a full-width character
 		$a .= $opt->{lefthalf};
 		$b  = $opt->{righthalf} . ${^POSTMATCH};
@@ -882,7 +882,7 @@ Import-tag C<:constants> can be used to access these constants.
 Option B<runin> and B<runout> is used to set maximum width of moving
 characters.  Default values are both 2.
 
-=item B<crack> => I<bool>
+=item B<crackwide> => I<bool>
 
 =item B<lefthalf> => I<char>
 

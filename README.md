@@ -295,7 +295,7 @@ function as well as **new** and **configure** method.
     Option **runin** and **runout** is used to set maximum width of moving
     characters.  Default values are both 2.
 
-- **crack** => _bool_
+- **crackwide** => _bool_
 - **lefthalf** => _char_
 - **righthalf** => _char_
 
