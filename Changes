@@ -2,10 +2,14 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.27 2024-11-20T07:12:51Z
+
+    - introduce "crackwide" and "lefthalf/righthalf" parameter
+
 2.26 2024-11-17T09:01:37Z
 
-    -- treat VT as EOL as well
-    -- disable padding when width is negative
+    - treat VT as EOL as well
+    - disable padding when width is negative
 
 2.25 2024-11-15T07:43:18Z
 
