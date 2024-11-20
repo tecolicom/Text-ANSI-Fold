@@ -7,7 +7,12 @@ use utf8;
 our $VERSION = "2.27";
 
 use Data::Dumper;
-$Data::Dumper::Sortkeys = 1;
+{
+    no warnings 'redefine';
+    *Data::Dumper::qquote = sub { qq["${\(shift)}"] };
+    $Data::Dumper::Useperl = 1;
+    $Data::Dumper::Sortkeys = 1;
+}
 use Carp;
 use List::Util qw(pairmap pairgrep);
 use Scalar::Util qw(looks_like_number);
@@ -349,7 +354,9 @@ sub fold {
 	}
 
 	last if $room < 1;
-	last if $room != $width and &_startWideSpacing and $room < 2;
+	if ($room < 2 and !$opt->{crackwide}) {
+	    last if $room != $width and &_startWideSpacing;
+	}
 
 	if (@reset) {
 	    $folded .= pop_reset();
@@ -392,16 +399,21 @@ sub fold {
 		next;
 	    }
 	    my($a, $b, $w) = simple_fold($s, $room);
-	    if ($w > $room && $room < $width) {
-		# $w == 2 && $room == 1
+	    if ($opt->{crackwide}) {
+		if ($w == $room - 1 && $b =~ /\A\p{IsWideSpacing}/p) {
+		    $a .= $opt->{lefthalf};
+		    $b  = $opt->{righthalf} . ${^POSTMATCH};
+		    $w++;
+		}
+		elsif ($w > $room) {
+		    $a = $opt->{lefthalf};
+		    $b = $opt->{righthalf} . $b;
+		    $w--;
+		}
+	    }
+	    if ($w > $room && $room != $width) {
 		$_ = $s . $_;
 		last;
-	    }
-	    if ($opt->{crackwide} && $w == $room - 1 && $b =~ /\A(\p{IsWideSpacing})/p) {
-		# split in the middle of a full-width character
-		$a .= $opt->{lefthalf};
-		$b  = $opt->{righthalf} . ${^POSTMATCH};
-		$w++;
 	    }
 	    ($folded, $_) = ($folded . $a, $b . $_);
 	    $room -= $w;
