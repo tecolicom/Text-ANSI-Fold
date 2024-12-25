@@ -182,7 +182,7 @@ my @default = (
     tabhead   => ' ',
     tabspace  => ' ',
     discard   => {},
-    crackwide => 0,
+    splitwide => 0,
     lefthalf  => "\N{NO-BREAK SPACE}",
     righthalf => "\N{NO-BREAK SPACE}",
     );
@@ -354,7 +354,7 @@ sub fold {
 	}
 
 	last if $room < 1;
-	if ($room < 2 and !$opt->{crackwide}) {
+	if ($room < 2 and !$opt->{splitwide}) {
 	    last if $room != $width and &_startWideSpacing;
 	}
 
@@ -399,7 +399,7 @@ sub fold {
 		next;
 	    }
 	    my($a, $b, $w) = simple_fold($s, $room);
-	    if ($opt->{crackwide}) {
+	    if ($opt->{splitwide}) {
 		if ($w == $room - 1 && $b =~ /\A\p{IsWideSpacing}/p) {
 		    $a .= $opt->{lefthalf};
 		    $b  = $opt->{righthalf} . ${^POSTMATCH};
@@ -894,7 +894,7 @@ Import-tag C<:constants> can be used to access these constants.
 Option B<runin> and B<runout> is used to set maximum width of moving
 characters.  Default values are both 2.
 
-=item B<crackwide> => I<bool>
+=item B<splitwide> => I<bool>
 
 =item B<lefthalf> => I<char>
 
