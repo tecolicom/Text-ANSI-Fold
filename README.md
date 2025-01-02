@@ -159,7 +159,7 @@ use `text` and `chops` in series:
 
     print join "\n", $obj->text($string)->chops;
 
-Actually, text can be set by c&lt;new> or `configure` method through
+Actually, text can be set by `new` or `configure` method through
 `text` parameter.  Next program just works.
 
     use Text::ANSI::Fold;

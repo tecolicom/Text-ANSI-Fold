@@ -754,7 +754,7 @@ use C<text> and C<chops> in series:
 
     print join "\n", $obj->text($string)->chops;
 
-Actually, text can be set by c<new> or C<configure> method through
+Actually, text can be set by C<new> or C<configure> method through
 C<text> parameter.  Next program just works.
 
     use Text::ANSI::Fold;
