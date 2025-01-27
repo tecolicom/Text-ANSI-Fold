@@ -53,11 +53,14 @@ our $nonspace_re = qr{ \p{IsPrintableLatin} }x;
 our $reset_re    = qr{ \e \[ [0;]* m }x;
 our $color_re    = qr{ \e \[ [\d;]* m }x;
 our $erase_re    = qr{ \e \[ [\d;]* K }x;
-our $csi_re      = qr{
+our $csi_body_re = qr{
     # see ECMA-48 5.4 Control sequences
     (?: \e\[ | \x9b )	# csi
     [\x30-\x3f]*	# parameter bytes
     [\x20-\x2f]*	# intermediate bytes
+}x;
+our $csi_re      = qr{
+    $csi_body_re
     [\x40-\x7e]		# final byte
 }x;
 our $osc_re      = qr{
@@ -367,6 +370,12 @@ sub fold {
 	    $folded .= $1;
 	    push @color_stack, $1;
 	    next;
+	}
+
+	# imcomplete CSI
+	if (s/\A(\e|$csi_body_re)\z//) {
+	    $folded .= $1;
+	    last;
 	}
 
 	# tab
