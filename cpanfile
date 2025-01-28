@@ -1,6 +1,6 @@
 requires 'perl', '5.014';
 
-requires 'Text::VisualWidth::PP', '0.05';
+requires 'Text::VisualWidth::PP', '0.06';
 requires 'List::Util', '1.45';
 
 on 'test' => sub {
