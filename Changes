@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.29 2025-01-30T07:26:13Z
+
+    - use Text::VisualWidth::PP@0.07
+      this enables handling Emoji_Modifier and Zero_Width_Joiner
+
 2.28 2025-01-27T13:22:37Z
 
     - imcomplete CSI sequence consumes zero width
