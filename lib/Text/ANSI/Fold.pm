@@ -53,17 +53,16 @@ our $nonspace_re = qr{ \p{IsPrintableLatin} }x;
 our $reset_re    = qr{ \e \[ [0;]* m }x;
 our $color_re    = qr{ \e \[ [\d;]* m }x;
 our $erase_re    = qr{ \e \[ [\d;]* K }x;
-our $csi_body_re = qr{
-    # see ECMA-48 5.4 Control sequences
-    (?: \e\[ | \x9b )	# csi
-    [\x30-\x3f]*	# parameter bytes
-    [\x20-\x2f]*	# intermediate bytes
-}x;
-our $csi_re      = qr{
-    $csi_body_re
-    [\x40-\x7e]		# final byte
-}x;
-our $osc_re      = qr{
+
+# see ECMA-48 5.4 Control sequences
+my  $csi_start       = qr{ (?: \e\[ | \x9b ) }x;
+my  $csi_parameter   = qr/[\x30-\x3f]*+/;
+my  $csi_itermidiate = qr/[\x20-\x2f]*+/;
+my  $csi_final       = qr/[\x40-\x7e]/;
+our $csi_body_re     = qr/${csi_start}${csi_parameter}${csi_itermidiate}/;
+our $csi_re          = qr/${csi_start}${csi_parameter}${csi_itermidiate}${csi_final}/;
+
+our $osc_re          = qr{
     # see ECMA-48 8.3.89 OSC - OPERATING SYSTEM COMMAND
     (?: \e\] | \x9d )		# osc
     [\x08-\x13\x20-\x7d]*+	# command
@@ -375,7 +374,7 @@ sub fold {
 	}
 
 	# imcomplete CSI
-	if (s/\A(\e|$csi_body_re)\z//) {
+	if (s/\A(\e+|$csi_body_re)\z//) {
 	    $folded .= $1;
 	    last;
 	}
