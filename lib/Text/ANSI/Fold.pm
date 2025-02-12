@@ -85,6 +85,7 @@ sub IsWideSpacing {
 +utf8::East_Asian_Width=Wide
 +utf8::East_Asian_Width=FullWidth
 -utf8::Nonspacing_Mark
+-utf8::Default_Ignorable_Code_Point
 END
 }
 
@@ -94,6 +95,7 @@ sub IsWideAmbiguousSpacing {
 +utf8::East_Asian_Width=FullWidth
 +utf8::East_Asian_Width=Ambiguous
 -utf8::Nonspacing_Mark
+-utf8::Default_Ignorable_Code_Point
 END
 }
 
