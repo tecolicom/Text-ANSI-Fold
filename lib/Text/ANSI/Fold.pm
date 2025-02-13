@@ -335,9 +335,15 @@ sub fold {
 	}
 	# carriage return
 	if (s/\A(\r+)//) {
-	    $folded .= $1;
-	    $room = $width;
-	    next;
+	    if (length == 0) {
+		# this must be the part of CRNL
+		$eol = $1;
+		last;
+	    } else {
+		$folded .= $1;
+		$room = $width;
+		next;
+	    }
 	}
 	# ECMA-48 OPERATING SYSTEM COMMAND
 	if (s/\A($osc_re)//) {
