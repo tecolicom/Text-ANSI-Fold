@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.30 2025-02-13T12:31:56Z
+
+    - add Default_Ignorable_Code_Point to non-spacing character
+    - CR at the end of string does not reset the position
+
 2.29 2025-01-30T07:26:13Z
 
     - use Text::VisualWidth::PP@0.07
