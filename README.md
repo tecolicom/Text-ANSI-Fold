@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/tecolicom/Text-ANSI-Fold/workflows/test/badge.svg)](https://github.com/tecolicom/Text-ANSI-Fold/actions) [![MetaCPAN Release](https://badge.fury.io/pl/Text-ANSI-Fold.svg)](https://metacpan.org/release/Text-ANSI-Fold)
+[![Actions Status](https://github.com/tecolicom/Text-ANSI-Fold/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/tecolicom/Text-ANSI-Fold/actions?workflow=test) [![MetaCPAN Release](https://badge.fury.io/pl/Text-ANSI-Fold.svg)](https://metacpan.org/release/Text-ANSI-Fold)
 # NAME
 
 Text::ANSI::Fold - Text folding library supporting ANSI terminal sequence and Asian wide characters with prohibition character handling.
@@ -294,6 +294,18 @@ function as well as **new** and **configure** method.
 
     Option **runin** and **runout** is used to set maximum width of moving
     characters.  Default values are both 2.
+
+- **margin** => _width_
+
+    This option reserves a margin space within the specified width for
+    run-in operation.  When margin is specified, the actual folding width
+    becomes `width - margin`, and the margin space is used for run-in
+    characters.  Any unused margin space is filled with padding characters
+    if padding is enabled.
+
+    If margin is 0 (default), run-in may cause the result to exceed the
+    specified width.  Set margin equal to or greater than runin value to
+    ensure the result always fits within the specified width.
 
 - **splitwide** => _bool_
 - **lefthalf** => _char_

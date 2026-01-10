@@ -516,7 +516,6 @@ sub fold {
     if ($opt->{padding} and $room > 0) {
 	my $padding = $opt->{padchar} x $room;
 	if (@bg_stack) {
-	    $padding .= $opt->{padchar} x $opt->{runin} if $opt->do_runin;
 	    $padding = join '', @bg_stack, $padding, SGR_RESET;
 	}
 	$folded .= $padding;
@@ -910,6 +909,18 @@ Import-tag C<:constants> can be used to access these constants.
 
 Option B<runin> and B<runout> is used to set maximum width of moving
 characters.  Default values are both 2.
+
+=item B<margin> => I<width>
+
+This option reserves a margin space within the specified width for
+run-in operation.  When margin is specified, the actual folding width
+becomes C<width - margin>, and the margin space is used for run-in
+characters.  Any unused margin space is filled with padding characters
+if padding is enabled.
+
+If margin is 0 (default), run-in may cause the result to exceed the
+specified width.  Set margin equal to or greater than runin value to
+ensure the result always fits within the specified width.
 
 =item B<splitwide> => I<bool>
 
