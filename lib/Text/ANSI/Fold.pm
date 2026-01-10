@@ -353,7 +353,8 @@ sub fold {
 	# erase line (assume 0)
 	if (s/\A($erase_re)//) {
 	    $folded .= $1 unless $obj->{discard}->{EL};
-	    @bg_stack = @color_stack;
+	    @bg_stack = grep { !/$erase_re/ } @color_stack;
+	    push @color_stack, $1;
 	    next;
 	}
 	# reset
