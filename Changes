@@ -2,6 +2,12 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.31 2026-01-11T02:25:18Z
+
+    - restore EL (Erase Line) sequence when folding
+    - fix padding calculation for run-in (remove @bg_stack hack)
+    - document margin parameter
+
 2.30 2025-02-13T12:31:56Z
 
     - add Default_Ignorable_Code_Point to non-spacing character
