@@ -65,7 +65,7 @@ our $csi_re          = qr/${csi_start}${csi_parameter}${csi_itermidiate}${csi_fi
 our $osc_re          = qr{
     # see ECMA-48 8.3.89 OSC - OPERATING SYSTEM COMMAND
     (?: \e\] | \x9d )		# osc
-    [\x08-\x13\x20-\x7d]*+	# command
+    [\x08-\x0d\x20-\x7e]*+	# command
     (?: \e\\ | \x9c | \a )	# st: string terminator
 }x;
 
