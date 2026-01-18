@@ -2,6 +2,12 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.32 2026-01-18T04:06:24Z
+
+    - Fix OSC regex to conform to ECMA-48 specification
+      (0x08-0x0d and 0x20-0x7e for command string)
+    - Add OSC 8 hyperlink tests
+
 2.31 2026-01-11T02:25:18Z
 
     - restore EL (Erase Line) sequence when folding
