@@ -42,6 +42,62 @@ sub osc8_link  { osc8_start($_[0]) . $_[1] . osc8_end() }
 }
 
 {
+    # OSC 8 close/reopen at fold boundary
+    my $url = "https://example.com";
+    my $start = osc8_start($url);
+    my $end   = osc8_end();
+    my $text  = osc8_link($url, "ABCDEFGHIJ");
+
+    my $l = left($text, width => 5);
+    my $r = right($text, width => 5);
+
+    # left should have: start + "ABCDE" + end (closed at boundary)
+    is($l, "${start}ABCDE${end}", "osc8 boundary: left closed");
+
+    # right should have: start + "FGHIJ" + end (reopened and closed)
+    is($r, "${start}FGHIJ${end}", "osc8 boundary: right reopened");
+}
+
+{
+    # OSC 8 with params close/reopen
+    my $start = "\e]8;id=foo;https://example.com\e\\";
+    my $end   = osc8_end();
+    my $text  = $start . "ABCDEFGHIJ" . $end;
+
+    my $l = left($text, width => 5);
+    my $r = right($text, width => 5);
+
+    is($l, "${start}ABCDE${end}", "osc8 params boundary: left closed");
+    is($r, "${start}FGHIJ${end}", "osc8 params boundary: right reopened");
+}
+
+{
+    # After link ends, no reopen on next fold
+    my $url = "https://example.com";
+    my $text = osc8_link($url, "AB") . "CDEFGHIJKL";
+
+    my $l = left($text, width => 5);
+    my $r = right($text, width => 5);
+
+    is($l, osc8_link($url, "AB") . "CDE", "osc8 ended: left correct");
+    is($r, "FGHIJKL", "osc8 ended: right has no link");
+}
+
+{
+    # OSC 8 fold with discard
+    my $url = "https://example.com";
+    my $text = osc8_link($url, "ABCDEFGHIJ");
+
+    $fold->configure(discard => { OSC => 1 });
+    my $l = left($text, width => 5);
+    my $r = right($text, width => 5);
+
+    is($l, "ABCDE", "osc8 discard fold: left no OSC");
+    is($r, "FGHIJ" . osc8_end(), "osc8 discard fold: right has trailing end");
+    $fold->configure(discard => {});
+}
+
+{
     # URL with tilde (ECMA-48 compliance test)
     my $url = "https://example.com/~user/path";
     my $text = osc8_link($url, "Home");

@@ -33,17 +33,26 @@ our $osc_re = qr{
 }x;
 ```
 
-### OSC 処理 (348-352行目)
+### OSC 処理
 
 ```perl
 if (s/\A($osc_re)//) {
-    $folded .= $1 unless $obj->{discard}->{OSC};
+    my $osc = $1;
+    unless ($obj->{discard}->{OSC}) {
+        $folded .= $osc;
+        if ($osc =~ /^(?:\e\]|\x9d)8;[^;]*;(.*?)(?:\e\\|\x9c|\a)$/) {
+            $osc8_link = $1 ne '' ? $osc : undef;
+        }
+    }
     next;
 }
 ```
 
 - OSC シーケンスを認識し、`discard` オプションに応じて保持/破棄
 - OSC シーケンス自体は表示幅ゼロとして処理される
+- OSC 8 ハイパーリンクの場合、開始/終了の状態を `$osc8_link` で追跡
+  - URI が非空 → 開始シーケンスを保存
+  - URI が空 → リンク終了（`undef`）
 
 ### SGR（色）の処理方法 (参考)
 
@@ -101,56 +110,41 @@ OSC Ps ST
 
 コミット: `5f4b40c Fix OSC regex to conform to ECMA-48 specification`
 
-## テスト結果
+## 折り返し時の OSC 8 状態管理
+
+### 問題
+
+ansicolumn 等でマルチカラム表示する際、ハイパーリンクの途中で
+折り返されると、閉じられていないリンクが右側のカラムに漏れてしまう。
+
+### 解決策
+
+SGR カラーと同様のアプローチで、fold 切断点で OSC 8 を閉じて再開する。
+
+```perl
+my $osc8_link;  # アクティブなハイパーリンク開始シーケンスを保持
+
+# fold 切断時の処理
+if (defined $osc8_link) {
+    $folded .= OSC8_RESET;            # 前の行でリンクを閉じる
+    $_ = $osc8_link . $_ if $_ ne ''; # 次の行でリンクを再開
+}
+```
 
 ### 折り返し動作の検証
 
 ```
-入力: \e]8;;https://google.com\e\\This is a long link text\e]8;;\e\\
+入力: \e]8;;https://example.com\e\\ABCDEFGHIJ\e]8;;\e\\
 
-折り幅: 15
+折り幅: 5
 
 出力:
-  Line1: \e]8;;https://google.com\e\\This is a long
-  Line2: link text\e]8;;\e\\
+  Line1: \e]8;;https://example.com\e\\ABCDE\e]8;;\e\\
+  Line2: \e]8;;https://example.com\e\\FGHIJ\e]8;;\e\\
 ```
 
-### 結果
-
-- **Line1**: OSC 8 開始あり、終了なし → **クリック可能**
-- **Line2**: OSC 8 開始なし、終了あり → **クリック可能**
-- 端末（iTerm2/Terminal.app）は行をまたいでもリンク状態を維持する
-
-### 結論
-
-**追加の状態管理は不要**
-
-- OSC 8 シーケンス自体は分割されない（osc_re で一塊として認識）
-- 端末は OSC 8 開始でリンクモードに入り、終了まで維持する
-- 改行があってもリンクモードは継続する
-- SGR のような「各行で閉じて再開」処理は不要
-
-### 注意点
-
-- 折り返された行を**別々に処理**する場合（行単位でパイプに渡す等）は問題になる可能性
-- 端末によって動作が異なる可能性（未検証の端末あり）
-
-## 将来の拡張（任意）
-
-各行を独立させたい場合の実装案:
-
-```perl
-my $current_hyperlink;  # 現在有効なハイパーリンク開始シーケンス
-
-# OSC 8 開始/終了の検出と状態管理
-# ...
-
-# 折り返し時の処理
-if ($current_hyperlink) {
-    $folded .= "\e]8;;\e\\";              # 前の行でリンクを閉じる
-    $_ = $current_hyperlink . $_;          # 次の行でリンクを再開
-}
-```
+- 各行が独立した完全なハイパーリンクになる
+- マルチカラム表示でリンクが他のカラムに漏れない
 
 ## 参考資料
 
@@ -161,5 +155,4 @@ if ($current_hyperlink) {
 ## 実装状況
 
 1. ✅ **完了**: 正規表現の修正（URL の `~` 対応、ECMA-48 準拠）
-2. ⏸️ **不要**: 状態管理と折り返し時のリンク維持（端末がリンク状態を維持するため）
-3. ⏸️ **保留**: 各行独立オプション（ユースケースが出てきたら検討）
+2. ✅ **完了**: OSC 8 状態管理（fold 切断時にリンクを閉じて再開）

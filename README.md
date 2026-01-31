@@ -41,6 +41,10 @@ divided in the middle of colored region, reset sequence is appended to
 the former text, and color recover sequence is inserted before the
 latter string.
 
+OSC 8 hyperlink sequences are also handled properly.  If the text is
+divided in the middle of a hyperlink, the link is closed at the end of
+the former text and reopened at the beginning of the latter string.
+
 This module also support Unicode Asian full-width and non-spacing
 combining characters properly.  Japanese text formatting with
 head-or-end of line prohibition character is also supported.  Set
@@ -266,6 +270,9 @@ function as well as **new** and **configure** method.
     Specify the list reference of control sequence name to be discarded.
     **EL** means Erase Line; **OSC** means Operating System Command, defined
     in ECMA-48.  Erase Line right after RESET sequence is always kept.
+
+    When OSC is discarded, OSC 8 hyperlink state tracking is also
+    disabled.
 
 - **linebreak** => _mode_
 - **runin** => _width_

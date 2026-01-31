@@ -69,7 +69,8 @@ our $osc_re          = qr{
     (?: \e\\ | \x9c | \a )	# st: string terminator
 }x;
 
-use constant SGR_RESET => "\e[m";
+use constant SGR_RESET  => "\e[m";
+use constant OSC8_RESET => "\e]8;;\e\\";
 
 sub IsPrintableLatin {
     return <<"END";
@@ -272,6 +273,7 @@ sub configure {
 my @color_stack;
 my @bg_stack;
 my @reset;
+my $osc8_link;
 sub put_reset { @reset = shift };
 sub pop_reset {
     @reset ? do { @color_stack = (); pop @reset } : '';
@@ -313,6 +315,7 @@ sub fold {
     my $eol = '';
     my $room = $width;
     @bg_stack = @color_stack = @reset = ();
+    $osc8_link = undef;
     my $unremarkable_re =
 	$opt->{expand} ? qr/[^\p{IsEOL}\e\t]/
 		       : qr/[^\p{IsEOL}\e]/;
@@ -347,7 +350,13 @@ sub fold {
 	}
 	# ECMA-48 OPERATING SYSTEM COMMAND
 	if (s/\A($osc_re)//) {
-	    $folded .= $1 unless $obj->{discard}->{OSC};
+	    my $osc = $1;
+	    unless ($obj->{discard}->{OSC}) {
+		$folded .= $osc;
+		if ($osc =~ /^(?:\e\]|\x9d)8;[^;]*;(.*?)(?:\e\\|\x9c|\a)$/) {
+		    $osc8_link = $1 ne '' ? $osc : undef;
+		}
+	    }
 	    next;
 	}
 	# erase line (assume 0)
@@ -512,6 +521,10 @@ sub fold {
 	$folded .= SGR_RESET;
 	$_ = join '', @color_stack, $_ if $_ ne '';
     }
+    if (defined $osc8_link) {
+	$folded .= OSC8_RESET;
+	$_ = $osc8_link . $_ if $_ ne '';
+    }
 
     if ($opt->{padding} and $room > 0) {
 	my $padding = $opt->{padchar} x $room;
@@ -651,6 +664,10 @@ the width is calculated by its visible representation.  If the text is
 divided in the middle of colored region, reset sequence is appended to
 the former text, and color recover sequence is inserted before the
 latter string.
+
+OSC 8 hyperlink sequences are also handled properly.  If the text is
+divided in the middle of a hyperlink, the link is closed at the end of
+the former text and reopened at the beginning of the latter string.
 
 This module also support Unicode Asian full-width and non-spacing
 combining characters properly.  Japanese text formatting with
@@ -879,6 +896,9 @@ module to treat them as wide character.
 Specify the list reference of control sequence name to be discarded.
 B<EL> means Erase Line; B<OSC> means Operating System Command, defined
 in ECMA-48.  Erase Line right after RESET sequence is always kept.
+
+When OSC is discarded, OSC 8 hyperlink state tracking is also
+disabled.
 
 =item B<linebreak> => I<mode>
 
