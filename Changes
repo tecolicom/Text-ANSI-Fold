@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.33 2026-01-31T01:50:51Z
+
+    - Add OSC 8 hyperlink state tracking across fold boundaries
+
 2.32 2026-01-18T04:06:24Z
 
     - Fix OSC regex to conform to ECMA-48 specification
