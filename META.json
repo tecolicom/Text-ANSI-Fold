@@ -65,7 +65,7 @@
          "web" : "https://github.com/tecolicom/Text-ANSI-Fold"
       }
    },
-   "version" : "2.3301",
+   "version" : "2.3302",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>"

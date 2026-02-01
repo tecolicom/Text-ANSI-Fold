@@ -2,6 +2,13 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.3302 2026-02-01T15:52:56Z
+
+    - Fix infinite loop when folding OSC 8 links at narrow width
+      (pwidth now strips OSC sequences; word boundary and run-out
+      pushback suppressed when no visible chars remain in folded text)
+    - Add progress check in retrieve to panic on no-progress fold
+
 2.3301 2026-02-01T14:44:21Z
 
     - Fix word boundary regex to skip OSC sequences
