@@ -158,4 +158,36 @@ sub osc8_link  { osc8_start($_[0]) . $_[1] . osc8_end() }
     is(left($text, width => 10), $text, "osc8 discard: OSC restored");
 }
 
+{
+    # OSC 8 with SGR and word boundary folding
+    # Regression: word boundary logic must skip OSC sequences
+    # to avoid splitting SGR sequences like \e[48;5;254m
+    # The bug: [^\e]* in the word boundary regex stops at \e inside OSC,
+    # causing ${csi_re} to fail and .*? to match through SGR sequences,
+    # which allows the word group to grab digits from inside SGR as a "word".
+    my $osc = osc8_link("https://github.com/tecolicom", "[app-ansi-tools]");
+    my $sgr = "\e[48;5;254m";
+    my $rst = "\e[m";
+
+    # Build a line long enough that width 78 causes fold inside SGR region
+    my $text = "| $osc | ";
+    for my $name (qw(ansicolumn ansiecho ansifold ansicut ansicolrm ansiprintf)) {
+        $text .= "${sgr}${name}${rst}, ";
+    }
+    $text .= "| description text |";
+
+    my ($l, $r) = fold($text, width => 78, boundary => 'word');
+
+    # Strip all valid ANSI sequences from right side to get visible text
+    (my $r_visible = $r) =~ s/\e\[ [^m]* m//gx;
+    $r_visible =~ s/\e\]8 [^\a\e]* (?:\e\\|\a)//gx;
+
+    # Visible text must not start with orphan SGR parameters (e.g., "254m")
+    unlike($r_visible, qr/\A[\d;]+m/, "osc8+sgr word: no orphan SGR params in visible text");
+
+    # Left must not end with incomplete SGR (before any trailing reset)
+    (my $l_no_reset = $l) =~ s/\e\[m\z//;
+    unlike($l_no_reset, qr/\e\[[\d;]*\z/, "osc8+sgr word: no partial SGR at end of left");
+}
+
 done_testing;
