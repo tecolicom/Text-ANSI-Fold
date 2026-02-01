@@ -17,7 +17,6 @@ use Carp;
 use List::Util qw(pairmap pairgrep);
 use Scalar::Util qw(looks_like_number);
 use Text::VisualWidth::PP 'vwidth';
-sub pwidth { vwidth $_[0] =~ s/\X\cH{1,2}//gr }
 
 ######################################################################
 use Exporter 'import';
@@ -71,6 +70,8 @@ our $osc_re          = qr{
 
 use constant SGR_RESET  => "\e[m";
 use constant OSC8_RESET => "\e]8;;\e\\";
+
+sub pwidth { vwidth $_[0] =~ s/\X\cH{1,2}//gr =~ s/${osc_re}//gr }
 
 sub IsPrintableLatin {
     return <<"END";
@@ -464,7 +465,8 @@ sub fold {
 	my $l = pwidth($w1);
 	## prefix length
 	my $p = $opt->{prefix} eq '' ? 0 : vwidth($opt->{prefix});
-	if ($room + $l < $width - $p and $l + pwidth($w2) <= $width - $p) {
+	if ($room + $l < $width - $p and $l + pwidth($w2) <= $width - $p
+	    and pwidth($lead) > 0) {
 	    $folded = $lead;
 	    $_ = $w1 . pop_reset() . $_;
 	    $room += $l;
@@ -480,7 +482,7 @@ sub fold {
 			    (?: ($prohibition_re{end}) (?: \cH{1,2} \g{-1})* )+
 			  ) \z
 			}xp
-	    and ${^PREMATCH} ne ''
+	    and ${^PREMATCH} ne '' and pwidth(${^PREMATCH}) > 0
 	    and (my $w = pwidth $+{runout}) <= $opt->{runout}) {
 
 	    $folded = ${^PREMATCH};

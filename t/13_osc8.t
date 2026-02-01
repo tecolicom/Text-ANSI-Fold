@@ -190,4 +190,40 @@ sub osc8_link  { osc8_start($_[0]) . $_[1] . osc8_end() }
     unlike($l_no_reset, qr/\e\[[\d;]*\z/, "osc8+sgr word: no partial SGR at end of left");
 }
 
+{
+    # OSC 8 with narrow width and word boundary must not loop forever
+    # When $lead contains only OSC sequences (pwidth=0), word pushback
+    # must be suppressed to guarantee visible progress.
+    my $text = osc8_link("https://github.com/tecolicom", "[tecolicom on GitHub]");
+
+    my @chops = $fold->text($text)->chops(width => 6, boundary => 'word');
+
+    ok(@chops > 0, "osc8 narrow word: produces output");
+
+    # Verify all visible text is preserved
+    my $joined = join '', @chops;
+    (my $visible = $joined) =~ s/\e\]8[^\a\e]*(?:\e\\|\a)//g;
+    is($visible, "[tecolicom on GitHub]", "osc8 narrow word: visible text preserved");
+}
+
+{
+    # OSC 8 with narrow width, word boundary, and linebreak (runin/runout)
+    # Regression: run-out pushback of prohibition chars (e.g., "[") after OSC
+    # must not cause infinite loop when only OSC sequences remain in $folded.
+    use Text::ANSI::Fold qw(:constants);
+    my $f = Text::ANSI::Fold->new(
+        boundary => 'word', linebreak => LINEBREAK_ALL,
+        runin => 2, runout => 2,
+    );
+    my $text = "- " . osc8_link("https://github.com/tecolicom", "[tecolicom on GitHub]");
+
+    my @chops = $f->text($text)->chops(width => 9);
+
+    ok(@chops > 0, "osc8 narrow linebreak: produces output");
+
+    my $joined = join '', @chops;
+    (my $visible = $joined) =~ s/\e\]8[^\a\e]*(?:\e\\|\a)//g;
+    is($visible, "- [tecolicom on GitHub]", "osc8 narrow linebreak: visible text preserved");
+}
+
 done_testing;
