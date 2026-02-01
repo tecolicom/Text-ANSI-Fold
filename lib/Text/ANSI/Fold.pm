@@ -585,8 +585,10 @@ sub retrieve {
     my $obj = shift;
     local *_ = \$obj->{text};
     return '' if not defined $_;
-    (my $folded, $_) = $obj->fold($_, @_);
-    $_ = undef if length == 0;
+    (my $folded, my $rest) = $obj->fold($_, @_);
+    die "panic: retrieve: no progress in fold"
+	if length $rest and length $rest >= length;
+    $_ = length $rest ? $rest : undef;
     $folded;
 }
 
