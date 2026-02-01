@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.3301 2026-02-01T14:44:21Z
+
+    - Fix word boundary regex to skip OSC sequences
+      (prevents splitting SGR sequences like \e[48;5;254m across fold boundaries)
+
 2.33 2026-01-31T01:50:51Z
 
     - Add OSC 8 hyperlink state tracking across fold boundaries
