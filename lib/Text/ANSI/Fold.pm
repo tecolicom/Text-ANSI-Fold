@@ -63,9 +63,10 @@ our $csi_re          = qr/${csi_start}${csi_parameter}${csi_itermidiate}${csi_fi
 
 our $osc_re          = qr{
     # see ECMA-48 8.3.89 OSC - OPERATING SYSTEM COMMAND
-    (?: \e\] | \x9d )		# osc
-    \p{IsOscCommand}*+		# command
-    (?: \e\\ | \x9c | \a )	# st: string terminator
+    # Extended to accept non-ASCII (undefined but tolerated)
+    (?: \e\] | \x9d )			  # osc
+    [^\x00-\x07\x0e-\x1f\x7f\x{009C}]*+	  # command (excludes U+009C: ST)
+    (?: \e\\ | \x9c | \a )		  # st: string terminator
 }x;
 
 use constant SGR_RESET  => "\e[m";
@@ -78,24 +79,6 @@ sub IsPrintableLatin {
 +utf8::ASCII
 +utf8::Latin
 -utf8::White_Space
-END
-}
-
-# ECMA-48 8.3.89: 00/08-00/13 and 02/00-07/14
-sub IsEcma48OscCommand {
-    return <<"END";
-0008\t000D
-0020\t007E
-END
-}
-
-# Extend ECMA-48 to accept non-ASCII (undefined but tolerated)
-sub IsOscCommand {
-    return <<"END";
-+utf8::Any
--utf8::ASCII
-+IsEcma48OscCommand
--009C
 END
 }
 
