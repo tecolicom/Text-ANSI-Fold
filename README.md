@@ -444,6 +444,22 @@ These characters are handled as follows:
     returned.  If it is found at the beginning of a string, it is added to
     the folded text and processing continues.
 
+# OSC 8 HYPERLINKS
+
+This module handles OSC 8 hyperlink sequences.  The OSC (Operating
+System Command) is defined in ECMA-48, and OSC 8 is an extension for
+terminal hyperlinks.
+
+The command string in OSC is defined in ECMA-48 8.3.89 to consist of
+characters in the range 00/08-00/13 and 02/00-07/14.  However, this
+module extends the definition to accept non-ASCII characters, since
+they may appear in URLs even though the OSC 8 specification recommends
+URI encoding.  The behavior for non-ASCII is undefined in the spec, but
+this module tolerates it for practical compatibility.
+
+The only exception is U+009C (STRING TERMINATOR), which is excluded
+because it terminates the OSC sequence.
+
 # SEE ALSO
 
 - [https://github.com/tecolicom/ANSI-Tools](https://github.com/tecolicom/ANSI-Tools)

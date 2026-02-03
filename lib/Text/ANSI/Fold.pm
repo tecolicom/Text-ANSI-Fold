@@ -64,7 +64,7 @@ our $csi_re          = qr/${csi_start}${csi_parameter}${csi_itermidiate}${csi_fi
 our $osc_re          = qr{
     # see ECMA-48 8.3.89 OSC - OPERATING SYSTEM COMMAND
     (?: \e\] | \x9d )		# osc
-    [\x08-\x0d\x20-\x7e]*+	# command
+    \p{IsOscCommand}*+		# command
     (?: \e\\ | \x9c | \a )	# st: string terminator
 }x;
 
@@ -78,6 +78,24 @@ sub IsPrintableLatin {
 +utf8::ASCII
 +utf8::Latin
 -utf8::White_Space
+END
+}
+
+# ECMA-48 8.3.89: 00/08-00/13 and 02/00-07/14
+sub IsEcma48OscCommand {
+    return <<"END";
+0008\t000D
+0020\t007E
+END
+}
+
+# Extend ECMA-48 to accept non-ASCII (undefined but tolerated)
+sub IsOscCommand {
+    return <<"END";
++utf8::Any
+-utf8::ASCII
++IsEcma48OscCommand
+-009C
 END
 }
 
@@ -1089,6 +1107,22 @@ returned.  If it is found at the beginning of a string, it is added to
 the folded text and processing continues.
 
 =back
+
+=head1 OSC 8 HYPERLINKS
+
+This module handles OSC 8 hyperlink sequences.  The OSC (Operating
+System Command) is defined in ECMA-48, and OSC 8 is an extension for
+terminal hyperlinks.
+
+The command string in OSC is defined in ECMA-48 8.3.89 to consist of
+characters in the range 00/08-00/13 and 02/00-07/14.  However, this
+module extends the definition to accept non-ASCII characters, since
+they may appear in URLs even though the OSC 8 specification recommends
+URI encoding.  The behavior for non-ASCII is undefined in the spec, but
+this module tolerates it for practical compatibility.
+
+The only exception is U+009C (STRING TERMINATOR), which is excluded
+because it terminates the OSC sequence.
 
 =head1 SEE ALSO
 
