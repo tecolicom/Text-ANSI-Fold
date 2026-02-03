@@ -65,7 +65,7 @@ our $osc_re          = qr{
     # see ECMA-48 8.3.89 OSC - OPERATING SYSTEM COMMAND
     # Extended to accept non-ASCII (undefined but tolerated)
     (?: \e\] | \x9d )			  # osc
-    [^\x00-\x07\x0e-\x1f\x7f\x{009C}]*+	  # command (excludes U+009C: ST)
+    [^\x00-\x07\x0e-\x1f\x7f-\x9f]*+	  # command (excludes C1 controls)
     (?: \e\\ | \x9c | \a )		  # st: string terminator
 }x;
 
