@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.3304 2026-02-03T12:05:24Z
+
+    - Accept non-ASCII characters in OSC command string
+      (extends ECMA-48 for URLs with non-ASCII; excludes C1 controls)
+
 2.3303 2026-02-03T04:27:19Z
 
     - Fix panic in retrieve when splitwide replaces a wide character
