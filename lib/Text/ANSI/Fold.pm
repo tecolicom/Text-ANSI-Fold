@@ -587,7 +587,7 @@ sub retrieve {
     return '' if not defined $_;
     (my $folded, my $rest) = $obj->fold($_, @_);
     die "panic: retrieve: no progress in fold"
-	if length $rest and length $rest >= length;
+	if length $rest and $rest eq $_;
     $_ = length $rest ? $rest : undef;
     $folded;
 }
