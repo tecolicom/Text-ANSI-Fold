@@ -457,7 +457,7 @@ sub fold {
 	and my($w2) = /\A( (?: ${word_char_re} \cH ? ) + )/x
 	and my($lead, $w1) = $folded =~ m{
 		\A ## avoid CSI/OSC final char making a word
-		   ( (?: [^\e]* (?:${csi_re}|${osc_re})++ ) *+ .*? )
+		   ( (?: [^\e\x9b\x9d]* (?:${csi_re}|${osc_re})++ ) *+ .*? )
 		   ( (?: ${word_char_re} \cH ? ) + )
 		\z }x
     ) {
