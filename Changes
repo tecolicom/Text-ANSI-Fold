@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.3305 2026-02-07T09:03:57Z
+
+    - Fix boundary=word regex to exclude C1 control characters
+      (\x9b for CSI, \x9d for OSC) from plain text consumption
+
 2.3304 2026-02-03T12:05:24Z
 
     - Accept non-ASCII characters in OSC command string
