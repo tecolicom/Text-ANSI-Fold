@@ -2,6 +2,10 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.34 2026-10-28T10:01:35Z
+
+    - Give no width to CSI other than SGR, such as cursor movement
+
 2.3305 2026-02-07T09:03:57Z
 
     - Fix boundary=word regex to exclude C1 control characters
