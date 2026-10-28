@@ -60,6 +60,8 @@ my  $csi_itermidiate = qr/[\x20-\x2f]*+/;
 my  $csi_final       = qr/[\x40-\x7e]/;
 our $csi_body_re     = qr/${csi_start}${csi_parameter}${csi_itermidiate}/;
 our $csi_re          = qr/${csi_start}${csi_parameter}${csi_itermidiate}${csi_final}/;
+# CSI other than SGR (cursor movement and the like)
+my  $csi_other_re    = qr/${csi_body_re}[\x40-\x6c\x6e-\x7e]/;
 
 our $osc_re          = qr{
     # see ECMA-48 8.3.89 OSC - OPERATING SYSTEM COMMAND
@@ -391,6 +393,13 @@ sub fold {
 	    next;
 	}
 
+	# other CSI: no width, the cursor movement is not counted; at
+	# the folding point it goes with the text after it, as color does
+	if (s/\A($csi_other_re)//) {
+	    $folded .= $1;
+	    next;
+	}
+
 	# imcomplete CSI
 	if (s/\A(\e+|$csi_body_re)\z//) {
 	    $folded .= $1;
@@ -673,6 +682,11 @@ latter string.
 OSC 8 hyperlink sequences are also handled properly.  If the text is
 divided in the middle of a hyperlink, the link is closed at the end of
 the former text and reopened at the beginning of the latter string.
+
+Other control sequences (CSI), such as cursor movement, are passed
+through with no width.  The movement of the cursor is not taken into
+account: text written over by moving the cursor back is counted as
+it is.
 
 This module also support Unicode Asian full-width and non-spacing
 combining characters properly.  Japanese text formatting with

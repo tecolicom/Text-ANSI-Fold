@@ -45,6 +45,11 @@ OSC 8 hyperlink sequences are also handled properly.  If the text is
 divided in the middle of a hyperlink, the link is closed at the end of
 the former text and reopened at the beginning of the latter string.
 
+Other control sequences (CSI), such as cursor movement, are passed
+through with no width.  The movement of the cursor is not taken into
+account: text written over by moving the cursor back is counted as
+it is.
+
 This module also support Unicode Asian full-width and non-spacing
 combining characters properly.  Japanese text formatting with
 head-or-end of line prohibition character is also supported.  Set
