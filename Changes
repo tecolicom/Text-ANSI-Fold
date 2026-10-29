@@ -2,6 +2,11 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.35 2026-10-29T05:09:39Z
+
+    - Fix the width returned by fold when margin is given
+    - Add length parameter to chops to get the width of each chop
+
 2.34 2026-10-28T10:01:35Z
 
     - Give no width to CSI other than SGR, such as cursor movement
