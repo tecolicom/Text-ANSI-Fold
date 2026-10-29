@@ -592,14 +592,19 @@ sub text :lvalue {
 }
 
 sub retrieve {
+    (shift->_retrieve(@_))[0];
+}
+
+# returns the folded string and its width
+sub _retrieve {
     my $obj = shift;
     local *_ = \$obj->{text};
-    return '' if not defined $_;
-    (my $folded, my $rest) = $obj->fold($_, @_);
+    return ('', 0) if not defined $_;
+    my($folded, $rest, $width) = $obj->fold($_, @_);
     die "panic: retrieve: no progress in fold"
 	if length $rest and $rest eq $_;
     $_ = length $rest ? $rest : undef;
-    $folded;
+    ($folded, $width);
 }
 
 sub chops {
@@ -607,15 +612,17 @@ sub chops {
     my %opt = @_;
     my $width = $opt{width} // $obj->{width};
 
-    my @chops;
+    my(@chops, @length);
 
     if (ref $width eq 'ARRAY') {
 	for my $w (@{$width}) {
 	    if ($w == 0) {
 		push @chops, '';
+		push @length, 0;
 	    }
-	    elsif ((my $chop = $obj->retrieve(width => $w)) ne '') {
+	    elsif ((my($chop, $l) = $obj->_retrieve(width => $w))[0] ne '') {
 		push @chops, $chop;
+		push @length, $l;
 	    }
 	    else {
 		last;
@@ -623,11 +630,13 @@ sub chops {
 	}
     }
     else {
-	while ((my $chop = $obj->retrieve(width => $width)) ne '') {
+	while ((my($chop, $l) = $obj->_retrieve(width => $width))[0] ne '') {
 	    push @chops, $chop;
+	    push @length, $l;
 	}
     }
 
+    @{$opt{length}} = @length if $opt{length};
     @chops;
 }
 
@@ -836,6 +845,15 @@ consumes all remaining strings.
 The padding operation is performed only on the last non-empty element,
 and no elements corresponding to subsequent items are returned.  Also,
 of course, padding is not performed for negative widths.
+
+=head2 B<chops> with length
+
+Give an array reference by C<length> parameter, and it is set to the
+visual width of each element returned (not the number of characters).
+It is the width that the fold counted, so the strings need not be
+measured again.  The padding is not included.
+
+    my @list = $fold->text($text)->chops(length => \my @length);
 
 =head1 OPTIONS
 

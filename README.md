@@ -199,6 +199,15 @@ The padding operation is performed only on the last non-empty element,
 and no elements corresponding to subsequent items are returned.  Also,
 of course, padding is not performed for negative widths.
 
+## **chops** with length
+
+Give an array reference by `length` parameter, and it is set to the
+visual width of each element returned (not the number of characters).
+It is the width that the fold counted, so the strings need not be
+measured again.  The padding is not included.
+
+    my @list = $fold->text($text)->chops(length => \my @length);
+
 # OPTIONS
 
 Option parameter can be specified as name-value list for **ansi\_fold**
