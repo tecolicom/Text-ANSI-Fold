@@ -551,7 +551,7 @@ sub fold {
 	$_ = $s . $_;
     }
 
-    ($folded . $eol, $_, $width - $room);
+    ($folded . $eol, $_, $width + $opt->{margin} - $room);
 }
 
 ##
