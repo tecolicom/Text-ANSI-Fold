@@ -21,20 +21,23 @@ for my $width (2 .. 12) {
 }
 
 # A long grapheme is not split between lines, even in a long paragraph
-# where fold takes the text a part at a time.
-SKIP: {
-    skip "\\b{gcb} is from perl 5.22", 1 if $] < 5.022;
-    my $family = "\N{U+1F468}\N{U+200D}\N{U+1F469}\N{U+200D}\N{U+1F467}\N{U+200D}\N{U+1F466}";
-    my $marks = "x" . "\N{U+301}" x 30;
-    my @split;
-    for my $text ($family x 60, $marks x 20) {
-	for my $width (2 .. 120) {
-	    push @split, $width
-		if grep { /^[\N{U+200D}\N{U+301}\N{U+1F469}\N{U+1F467}\N{U+1F466}]/ }
-		   lines($text, $width);
-	}
+# where fold takes the text a part at a time.  Each line is made of
+# whole units, when the unit is one grapheme for the perl in use: the
+# family emoji is not, before the grapheme rules of Unicode 9.0.
+for my $case (
+    [ "\N{U+1F468}\N{U+200D}\N{U+1F469}\N{U+200D}\N{U+1F467}\N{U+200D}\N{U+1F466}" => 'family emoji' ],
+    [ "x" . "\N{U+301}" x 30 => 'letter with 30 marks' ],
+) {
+    my($unit, $name) = @$case;
+    SKIP: {
+	skip "\\b{gcb} is from perl 5.22", 1 if $] < 5.022;
+	skip "$name is not one grapheme in this perl", 1 if $unit !~ /\A\X\z/;
+	my @split = grep {
+	    my $width = $_;
+	    grep { !/\A(?:\Q$unit\E)+\z/ } lines($unit x 60, $width);
+	} 2 .. 120;
+	is("@split", "", "$name is not split");
     }
-    is("@split", "", "long graphemes are not split");
 }
 
 # A combining mark right after the width stays with its letter.
