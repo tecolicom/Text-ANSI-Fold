@@ -430,12 +430,15 @@ sub fold {
 	# consume unremarkable characters
 	if (s/\A(\e+|(?:${unremarkable_re}(?!\cH))+)//) {
 	    my $s = $1;
-	    if ((my $w = vwidth($s)) <= $room) {
+	    # simple_fold looks only as far as the room, while vwidth
+	    # would measure the whole run, which can be the rest of a
+	    # long paragraph
+	    my($a, $b, $w) = simple_fold($s, $room);
+	    if ($b eq '' and $w <= $room) {
 		$folded .= $s;
 		$room -= $w;
 		next;
 	    }
-	    my($a, $b, $w) = simple_fold($s, $room);
 	    if ($opt->{splitwide}) {
 		if ($w == $room - 1 && $b =~ /\A\p{IsWideSpacing}/p) {
 		    $a .= $opt->{lefthalf};
