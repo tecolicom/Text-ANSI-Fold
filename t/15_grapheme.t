@@ -20,6 +20,23 @@ for my $width (2 .. 12) {
     is(scalar @over, 0, "emoji sequences within width $width");
 }
 
+# A long grapheme is not split between lines, even in a long paragraph
+# where fold takes the text a part at a time.
+SKIP: {
+    skip "\\b{gcb} is from perl 5.22", 1 if $] < 5.022;
+    my $family = "\N{U+1F468}\N{U+200D}\N{U+1F469}\N{U+200D}\N{U+1F467}\N{U+200D}\N{U+1F466}";
+    my $marks = "x" . "\N{U+301}" x 30;
+    my @split;
+    for my $text ($family x 60, $marks x 20) {
+	for my $width (2 .. 120) {
+	    push @split, $width
+		if grep { /^[\N{U+200D}\N{U+301}\N{U+1F469}\N{U+1F467}\N{U+1F466}]/ }
+		   lines($text, $width);
+	}
+    }
+    is("@split", "", "long graphemes are not split");
+}
+
 # A combining mark right after the width stays with its letter.
 is_deeply([ lines("abe\N{U+301}xyz", 3) ], [ "abe\N{U+301}", "xyz" ],
 	  "combining mark after ASCII at the width");

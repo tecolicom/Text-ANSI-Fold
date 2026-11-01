@@ -285,6 +285,9 @@ sub pop_reset {
 
 use constant MAX_INT => ~0 >> 1;
 
+# grapheme cluster boundary, from perl 5.22
+my $gcb = $] >= 5.022 ? '\b{gcb}' : '';
+
 sub IsEOL {
     <<"END";
 0000\t0000
@@ -306,7 +309,8 @@ sub fold {
     looks_like_number $width and $width == int($width)
 	or croak "$width: invalid width";
     $opt->{padding} = 0 if $width <= 0;
-    $width = MAX_INT    if $width <  0;
+    my $unlimited = $width < 0;
+    $width = MAX_INT if $unlimited;
     ($width -= $opt->{margin}) > 0 or croak "margin too big";
 
     my $word_char_re =
@@ -320,9 +324,10 @@ sub fold {
     my $room = $width;
     @bg_stack = @color_stack = @reset = ();
     $osc8_link = undef;
+    # a character with no special handling, and not overstruck
     my $unremarkable_re =
-	$opt->{expand} ? qr/[^\p{IsEOL}\e\t]/
-		       : qr/[^\p{IsEOL}\e]/;
+	$opt->{expand} ? qr/[^\p{IsEOL}\e\t](?!\cH)/
+		       : qr/[^\p{IsEOL}\e](?!\cH)/;
 
   FOLD:
     while (length) {
@@ -428,7 +433,24 @@ sub fold {
 	next if $bs;
 
 	# consume unremarkable characters
-	if (s/\A(\e+|(?:${unremarkable_re}(?!\cH))+)//) {
+	# no more than the room can take, so as not to scan the rest of
+	# a long paragraph for every line; no limit for an unlimited
+	# width, or beyond what a regex quantifier allows
+	my $max = do {
+	    if ($unlimited) {
+		'';
+	    } elsif ((my $n = $room * 2 + 8) > 32766) {
+		'';
+	    } else {
+		$n;
+	    }
+	};
+	if (s{\A(
+		\e+					# escapes
+	      |						# or
+		${unremarkable_re}{1,$max}+		# up to the limit
+		${unremarkable_re}*? $gcb		# and to the end of the grapheme
+	    )}{}x) {
 	    my $s = $1;
 	    # simple_fold looks only as far as the room, while vwidth
 	    # would measure the whole run, which can be the rest of a
