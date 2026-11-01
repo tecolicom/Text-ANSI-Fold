@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        perl: [ '5.40', '5.38', '5.30', '5.28', '5.18', '5.16', '5.14' ]
+        perl: [ '5.44', '5.42', '5.40', '5.38', '5.30', '5.28', '5.22', '5.20', '5.18', '5.16', '5.14' ]
     name: Perl ${{ matrix.perl }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup perl
         uses: shogo82148/actions-setup-perl@v1
         with:
