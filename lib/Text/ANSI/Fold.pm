@@ -562,19 +562,54 @@ sub simple_fold {
     my $width = shift;
     $width <= 0 and croak "parameter error";
 
-    my($left, $right) = $orig =~ m/^(\X{0,$width}+)(.*)/
-	or croak "$width: unexpected width";
-
-    my $w = vwidth $left;
-    while ($w > $width) {
-	use integer;
-	my $trim = ($w - $width + 1) / 2;
-	$left =~ s/\X \K ( \X{$trim} ) \z//x or last;
-	$right = $1 . $right;
-	$w -= vwidth $1;
+    # Printable ASCII is as wide as its length.  The character after
+    # the width is checked too, as it may be a mark on the last one.
+    if (substr($orig, 0, $width + 1) !~ /[^\x20-\x7e]/) {
+	return ($orig, '', length $orig) if length $orig <= $width;
+	return (substr($orig, 0, $width), substr($orig, $width), $width);
     }
 
-    ($left, $right, $w);
+    my $left = _trim($orig, $width);
+    $left = $orig =~ /^(\X)/ ? $1 : '' if $left eq '';	# at least one
+    ($left, substr($orig, length $left), vwidth $left);
+}
+
+##
+## The longest leading part of a string within a width, as trim of
+## Text::VisualWidth::PP, which counts a zero-width character as 1
+## before 0.09.  The classes are those of Text::VisualWidth::PP, so
+## that the result agrees with vwidth.
+##
+sub _trim {
+    my($str, $limit) = @_;
+
+    my $cnt = 0;
+    my $ret = '';
+    my $fullwidth = $Text::VisualWidth::PP::EastAsian
+	? qr/\p{Text::VisualWidth::PP::InVWPP1Fullwidth}/
+	: qr/\p{Text::VisualWidth::PP::InVWPP0Fullwidth}/;
+    my $halfwidth = $Text::VisualWidth::PP::EastAsian
+	? qr/\p{Text::VisualWidth::PP::InVWPP1Halfwidth}/
+	: qr/\p{Text::VisualWidth::PP::InVWPP0Halfwidth}/;
+    while ($str =~ /\G(\X)/g) {
+	my $ch = $1;
+	# a zero-width character is in neither class, and vwidth gives 0
+	my $w = do {
+	    if ($ch =~ /\A[\x20-\x7e]\z/) {
+		1;
+	    } elsif ($ch =~ /\A$fullwidth\z/) {
+		2;
+	    } elsif ($ch =~ /\A$halfwidth\z/) {
+		1;
+	    } else {
+		vwidth($ch);
+	    }
+	};
+	last if $cnt + $w > $limit;
+	$ret .= $ch;
+	$cnt += $w;
+    }
+    $ret;
 }
 
 ######################################################################
