@@ -2,6 +2,19 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.37 2026-11-03T08:07:06Z
+
+    - Do not die with "no progress" or hang when a line has only the prefix:
+      a wide character after the prefix may make the line one column too
+      long instead
+    - Do not count sequences such as erase line as visible text in the
+      word boundary and run-out checks, and in the width of the prefix
+    - Do not run in the filler of splitwide, which made the line too wide
+    - Keep a sequence with no visible text after it on a line of exactly
+      the width, instead of making an extra line for it
+    - Require Text::VisualWidth::PP 0.09, which gives the right width of
+      new emoji on perl 5.30 or later
+
 2.36 2026-11-03T01:17:52Z
 
     - Add trim option, which removes ASCII spaces at the end of folded
