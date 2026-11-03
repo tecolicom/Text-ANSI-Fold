@@ -178,6 +178,7 @@ my @default = (
     text      => '',
     width     => undef,
     padding   => 0,
+    trim      => 0,
     boundary  => '',
     padchar   => ' ',
     prefix    => '',
@@ -552,6 +553,15 @@ sub fold {
 	    $_ = ${^POSTMATCH};
 	}
 	$folded .= join '', @runin if @runin;
+    }
+
+    ##
+    ## TRIM: spaces at the end of a folded line, unless they are colored
+    ##
+    if ($opt->{trim} and $eol eq '' and length and not /\A\p{IsEOL}/
+	and not @color_stack and not defined $osc8_link
+	and $folded =~ s/(\N{SPACE}+)\z//) {
+	$room += vwidth(my $spaces = $1);
     }
 
     if (@color_stack) {
@@ -985,6 +995,18 @@ prefix string.
 The B<fold> function does not complain if the result of adding a
 prefix string is longer than the original text.  The caller must be
 very careful because of the possibility of an infinite loop.
+
+=item B<trim> => I<bool>
+
+If B<trim> option is given with true value, spaces at the end of a
+folded line are removed, including those brought there by the run-in
+operation, so that they do not make the line longer than the width.
+Only ASCII spaces are removed; other spaces, such as full-width spaces
+and the no-break space that B<splitwide> uses, are kept.  Default is 0.
+
+Spaces at the end of the original line are left as they are, because
+the line is not folded there.  Colored spaces are also left, because
+their background color may be visible.
 
 =item B<ambiguous> => C<narrow> or C<wide>
 

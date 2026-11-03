@@ -277,6 +277,18 @@ function as well as **new** and **configure** method.
     prefix string is longer than the original text.  The caller must be
     very careful because of the possibility of an infinite loop.
 
+- **trim** => _bool_
+
+    If **trim** option is given with true value, spaces at the end of a
+    folded line are removed, including those brought there by the run-in
+    operation, so that they do not make the line longer than the width.
+    Only ASCII spaces are removed; other spaces, such as full-width spaces
+    and the no-break space that **splitwide** uses, are kept.  Default is 0.
+
+    Spaces at the end of the original line are left as they are, because
+    the line is not folded there.  Colored spaces are also left, because
+    their background color may be visible.
+
 - **ambiguous** => `narrow` or `wide`
 
     Tells how to treat Unicode East Asian ambiguous characters.  Default
