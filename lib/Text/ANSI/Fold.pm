@@ -392,7 +392,9 @@ sub fold {
 	    next;
 	}
 
-	last if $room < 1;
+	# sequences with no visible text after them stay on this line
+	last if $room < 1
+	    and not /\A(?:${csi_re}|${osc_re})*+(?:\z|\p{IsEOL})/;
 	if ($room < 2 and !$opt->{splitwide}) {
 	    last if $room != $head_room and &_startWideSpacing;
 	}
@@ -776,6 +778,10 @@ Other control sequences (CSI), such as cursor movement, are passed
 through with no width.  The movement of the cursor is not taken into
 account: text written over by moving the cursor back is counted as
 it is.
+
+At the folding point, a sequence goes to the next line with the text
+after it.  When no visible text follows up to the end of the line, it
+stays on the line, even if the line has no room left.
 
 This module also support Unicode Asian full-width and non-spacing
 combining characters properly.  Text is divided between grapheme

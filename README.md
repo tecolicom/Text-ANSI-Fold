@@ -50,6 +50,10 @@ through with no width.  The movement of the cursor is not taken into
 account: text written over by moving the cursor back is counted as
 it is.
 
+At the folding point, a sequence goes to the next line with the text
+after it.  When no visible text follows up to the end of the line, it
+stays on the line, even if the line has no room left.
+
 This module also support Unicode Asian full-width and non-spacing
 combining characters properly.  Text is divided between grapheme
 clusters, so that a character with combining marks or an emoji

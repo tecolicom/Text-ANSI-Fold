@@ -78,4 +78,25 @@ folds("indented line same as prefix", "    (aa",
 	      [ "あい<", ">えお", 5 ], "splitwide with visible filler");
 }
 
+# sequences with no visible text after them stay at the end of a full line
+{
+    my $image = "\e]1337;File=x:AAAA\a";
+    my $fold = Text::ANSI::Fold->new(width => 5);
+    is_deeply([ $fold->fold("     \e[5D$image") ],
+	      [ "     \e[5D$image", "", 5 ], "image after spaces of the same width");
+    is_deeply([ $fold->fold("     \e[5D$image\n") ],
+	      [ "     \e[5D$image\n", "", 5 ], "and before a newline");
+    is_deeply([ $fold->fold("abcde\e[3D") ],
+	      [ "abcde\e[3D", "", 5 ], "cursor movement at the end");
+    is_deeply([ $fold->fold("abcde\e[31m") ],
+	      [ "abcde\e[31m\e[m", "", 5 ], "color at the end");
+    is_deeply([ $fold->fold("abcde\e[3Dxyz") ],
+	      [ "abcde", "\e[3Dxyz", 5 ], "cursor movement before text goes next");
+    is_deeply([ $fold->fold("abcde\e[31mxyz\e[m") ],
+	      [ "abcde", "\e[31mxyz\e[m", 5 ], "color before text goes next");
+    $fold = Text::ANSI::Fold->new(width => 5, trim => 1);
+    is_deeply([ $fold->fold("     \e[5D$image") ],
+	      [ "     \e[5D$image", "", 5 ], "image line with trim");
+}
+
 done_testing;
