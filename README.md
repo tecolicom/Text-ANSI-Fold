@@ -107,6 +107,12 @@ using default width with additional parameter:
 Some other easy-to-use interfaces are provided by sister module
 [Text::ANSI::Fold::Util](https://metacpan.org/pod/Text%3A%3AANSI%3A%3AFold%3A%3AUtil).
 
+# REGULAR EXPRESSIONS
+
+Import-tag `:regex` gives the regular expressions `$reset_re`,
+`$color_re`, `$erase_re`, `$csi_re` and `$osc_re`, which match the
+ANSI sequences this module recognizes.
+
 # OBJECT INTERFACE
 
 You can create an object to hold parameters, which is effective during

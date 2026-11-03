@@ -836,6 +836,12 @@ using default width with additional parameter:
 Some other easy-to-use interfaces are provided by sister module
 L<Text::ANSI::Fold::Util>.
 
+=head1 REGULAR EXPRESSIONS
+
+Import-tag C<:regex> gives the regular expressions C<$reset_re>,
+C<$color_re>, C<$erase_re>, C<$csi_re> and C<$osc_re>, which match the
+ANSI sequences this module recognizes.
+
 =head1 OBJECT INTERFACE
 
 You can create an object to hold parameters, which is effective during
