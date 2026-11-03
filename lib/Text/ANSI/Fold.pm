@@ -612,8 +612,8 @@ sub simple_fold {
 ##
 ## The longest leading part of a string within a width, in graphemes.
 ## This is trim of Text::VisualWidth::PP, which counts a zero-width
-## character as 1 up to 0.08.  The classes are those of
-## Text::VisualWidth::PP, so that the result agrees with vwidth.
+## character as 1.  The classes are those of Text::VisualWidth::PP, so
+## that the result agrees with vwidth.
 ##
 sub _trim {
     my($str, $limit) = @_;
