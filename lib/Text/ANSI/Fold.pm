@@ -600,10 +600,10 @@ sub simple_fold {
 }
 
 ##
-## The longest leading part of a string within a width, as trim of
-## Text::VisualWidth::PP, which counts a zero-width character as 1
-## before 0.09.  The classes are those of Text::VisualWidth::PP, so
-## that the result agrees with vwidth.
+## The longest leading part of a string within a width, in graphemes.
+## This is trim of Text::VisualWidth::PP, which counts a zero-width
+## character as 1 up to 0.08.  The classes are those of
+## Text::VisualWidth::PP, so that the result agrees with vwidth.
 ##
 sub _trim {
     my($str, $limit) = @_;
@@ -758,9 +758,13 @@ account: text written over by moving the cursor back is counted as
 it is.
 
 This module also support Unicode Asian full-width and non-spacing
-combining characters properly.  Japanese text formatting with
-head-or-end of line prohibition character is also supported.  Set
-the linebreak mode to enable it.
+combining characters properly.  Text is divided between grapheme
+clusters, so that a character with combining marks or an emoji
+sequence stays in one line, as far as the grapheme rules of the perl
+in use go; before perl 5.22, a grapheme in a long paragraph may
+rarely be split.  Japanese text formatting with head-or-end of line
+prohibition character is also supported.  Set the linebreak mode to
+enable it.
 
 Since the overhead of ANSI escape sequence handling is not significant
 when the data does not include them, this module can be used for
