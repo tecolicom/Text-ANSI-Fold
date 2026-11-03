@@ -275,7 +275,12 @@ function as well as **new** and **configure** method.
 
     The **fold** function does not complain if the result of adding a
     prefix string is longer than the original text.  The caller must be
-    very careful because of the possibility of an infinite loop.
+    very careful because of the possibility of an infinite loop, when the
+    prefix is as wide as the width or longer, or given by a subroutine.
+
+    A line has at least one character after the prefix, even if it does
+    not fit.  A wide character after the prefix may make the line one
+    column longer than the width.
 
 - **trim** => _bool_
 

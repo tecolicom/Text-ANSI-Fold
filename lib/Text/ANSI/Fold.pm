@@ -74,7 +74,7 @@ our $osc_re          = qr{
 use constant SGR_RESET  => "\e[m";
 use constant OSC8_RESET => "\e]8;;\e\\";
 
-sub pwidth { vwidth $_[0] =~ s/\X\cH{1,2}//gr =~ s/${osc_re}//gr }
+sub pwidth { vwidth $_[0] =~ s/\X\cH{1,2}//gr =~ s/${osc_re}|${csi_re}//gr }
 
 sub IsPrintableLatin {
     return <<"END";
@@ -320,9 +320,18 @@ sub fold {
 
     local $Text::VisualWidth::PP::EastAsian = $opt->{ambiguous} eq 'wide';
 
+    # The prefix put at the head of this text by the previous call does
+    # not count as progress: there must be something after it.
+    my $prefix_width = $opt->{prefix} eq '' ? 0 : pwidth($opt->{prefix});
+    my $head_width = (not ref $opt->{prefix} and index($_, $opt->{prefix}) == 0)
+	? $prefix_width : 0;
+    # the room of a line with nothing after the prefix yet
+    my $head_room = $width > $head_width ? $width - $head_width : $width;
+
     my $folded = '';
     my $eol = '';
     my $room = $width;
+    my $split = 0;
     @bg_stack = @color_stack = @reset = ();
     $osc8_link = undef;
     # a character with no special handling, and not overstruck
@@ -385,7 +394,7 @@ sub fold {
 
 	last if $room < 1;
 	if ($room < 2 and !$opt->{splitwide}) {
-	    last if $room != $width and &_startWideSpacing;
+	    last if $room != $head_room and &_startWideSpacing;
 	}
 
 	if (@reset) {
@@ -467,14 +476,16 @@ sub fold {
 		    $a .= $opt->{lefthalf};
 		    $b  = $opt->{righthalf} . ${^POSTMATCH};
 		    $w++;
+		    $split = 1;
 		}
 		elsif ($w > $room) {
 		    $a = $opt->{lefthalf};
 		    $b = $opt->{righthalf} . $b;
 		    $w--;
+		    $split = 1;
 		}
 	    }
-	    if ($w > $room && $room != $width) {
+	    if ($w > $room && $room != $head_room) {
 		$_ = $s . $_;
 		last;
 	    }
@@ -499,10 +510,9 @@ sub fold {
 	## Break line before word only when enough space will be
 	## provided for the word in the next turn.
 	my $l = pwidth($w1);
-	## prefix length
-	my $p = $opt->{prefix} eq '' ? 0 : vwidth($opt->{prefix});
-	if ($room + $l < $width - $p and $l + pwidth($w2) <= $width - $p
-	    and pwidth($lead) > 0) {
+	my $next = $width - $prefix_width;
+	if ($room + $l < $next and $l + pwidth($w2) <= $next
+	    and pwidth($lead) > $head_width) {
 	    $folded = $lead;
 	    $_ = $w1 . pop_reset() . $_;
 	    $room += $l;
@@ -518,7 +528,7 @@ sub fold {
 			    (?: ($prohibition_re{end}) (?: \cH{1,2} \g{-1})* )+
 			  ) \z
 			}xp
-	    and ${^PREMATCH} ne '' and pwidth(${^PREMATCH}) > 0
+	    and ${^PREMATCH} ne '' and pwidth(${^PREMATCH}) > $head_width
 	    and (my $w = pwidth $+{runout}) <= $opt->{runout}) {
 
 	    $folded = ${^PREMATCH};
@@ -535,7 +545,7 @@ sub fold {
     ##
     ## RUN-IN
     ##
-    if ($opt->do_runin) {
+    if ($opt->do_runin and not $split) {
 	my @runin;
 	my $m = $opt->{runin};
 	while ($m > 0 and
@@ -994,7 +1004,12 @@ prefix string.
 
 The B<fold> function does not complain if the result of adding a
 prefix string is longer than the original text.  The caller must be
-very careful because of the possibility of an infinite loop.
+very careful because of the possibility of an infinite loop, when the
+prefix is as wide as the width or longer, or given by a subroutine.
+
+A line has at least one character after the prefix, even if it does
+not fit.  A wide character after the prefix may make the line one
+column longer than the width.
 
 =item B<trim> => I<bool>
 
