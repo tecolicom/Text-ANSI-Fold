@@ -630,7 +630,7 @@ sub _trim {
 	my $ch = $1;
 	# a zero-width character is in neither class, and vwidth gives 0
 	my $w = do {
-	    if ($ch =~ /\A[\x20-\x7e]\z/) {
+	    if ($ch =~ /\A[\x00-\x7f]\z/) {
 		1;
 	    } elsif ($ch =~ /\A$fullwidth\z/) {
 		2;
