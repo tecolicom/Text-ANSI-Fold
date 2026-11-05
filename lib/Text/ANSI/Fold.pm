@@ -50,8 +50,8 @@ sub ansi_fold {
 our $alphanum_re = qr{ [_\d\p{Latin}\p{Greek}\p{Cyrillic}\p{Hangul}] }x;
 our $nonspace_re = qr{ \p{IsPrintableLatin} }x;
 our $reset_re    = qr{ \e \[ [0;]* m }x;
-our $color_re    = qr{ \e \[ [\d;]* m }x;
-our $erase_re    = qr{ \e \[ [\d;]* K }x;
+our $color_re    = qr{ \e \[ [\d:;]* m }x;
+our $erase_re    = qr{ \e \[ [\d:;]* K }x;
 
 # see ECMA-48 5.4 Control sequences
 my  $csi_start       = qr{ (?: \e\[ | \x9b ) }x;
