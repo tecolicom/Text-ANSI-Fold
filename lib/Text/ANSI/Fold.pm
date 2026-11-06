@@ -47,7 +47,8 @@ sub ansi_fold {
 }
 ######################################################################
 
-our $alphanum_re = qr{ [_\d\p{Latin}\p{Greek}\p{Cyrillic}\p{Hangul}] }x;
+# \p{Hangul} is Script_Extensions, which takes CJK punctuation as well
+our $alphanum_re = qr{ [_\d\p{Latin}\p{Greek}\p{Cyrillic}\p{sc=Hangul}] }x;
 our $nonspace_re = qr{ \p{IsPrintableLatin} }x;
 our $reset_re    = qr{ \e \[ [0;]* m }x;
 our $color_re    = qr{ \e \[ [\d:;]* m }x;
