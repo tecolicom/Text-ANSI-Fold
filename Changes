@@ -2,6 +2,12 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.39 2026-11-06T10:11:59Z
+
+    - CJK punctuation is not a word character with boundary => "word":
+      \p{Hangul} took 、。「」 and others, so 」78、「extractor was taken as one word and
+      the line was broken before it
+
 2.38 2026-11-05T05:30:44Z
 
     - Take a colon in SGR and EL parameters: ESC[4:3m was cut in the middle when folded
