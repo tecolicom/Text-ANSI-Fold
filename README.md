@@ -489,6 +489,10 @@ These characters are handled as follows:
     returned.  If it is found at the beginning of a string, it is added to
     the folded text and processing continues.
 
+    The beginning is where no text is before it: a form feed after
+    nothing but ANSI sequences, as in a form feed with a color, is at the
+    beginning, and is kept in the place where it is.
+
 # OSC 8 HYPERLINKS
 
 This module handles OSC 8 hyperlink sequences.  The OSC (Operating

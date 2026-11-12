@@ -351,9 +351,13 @@ sub fold {
 	    last;
 	}
 	# form feed
+	# It is at the beginning when no text is before it: sequences
+	# such as colors do not count, or a form feed in a color would
+	# stay in the rest forever.
 	if (m/\A(\f+)/p) {
-	    last if length $folded;
-	    ($folded, $_) = ($1, ${^POSTMATCH});
+	    my($ff, $post) = ($1, ${^POSTMATCH});
+	    last if $folded =~ s/(?:${csi_re}|${osc_re}|\f)//gr ne '';
+	    ($folded, $_) = ($folded . $ff, $post);
 	    next;
 	}
 	# carriage return
@@ -1234,6 +1238,10 @@ If a form feed character is found in the middle of a string,
 processing stops and the string up to the point immediately before is
 returned.  If it is found at the beginning of a string, it is added to
 the folded text and processing continues.
+
+The beginning is where no text is before it: a form feed after
+nothing but ANSI sequences, as in a form feed with a color, is at the
+beginning, and is kept in the place where it is.
 
 =back
 
