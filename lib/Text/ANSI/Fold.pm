@@ -569,7 +569,11 @@ sub fold {
 	    push @runin, ${^MATCH};
 	    $_ = ${^POSTMATCH};
 	}
-	$folded .= join '', @runin if @runin;
+	if (@runin) {
+	    $folded .= join '', @runin;
+	    # colors with no visible text after them stay on this line
+	    $folded .= $1 if s/\A((?:${color_re}|${reset_re})++)\z//;
+	}
     }
 
     ##
