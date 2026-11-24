@@ -2,6 +2,15 @@ Revision history for Perl extension Text-ANSI-Fold
 
 {{$NEXT}}
 
+2.40 2026-11-24T08:02:03Z
+
+    - DCS, SOS, PM and APC, the control strings of ECMA-48 other than
+      OSC, are kept whole with no width, as OSC is.  A long APC of the
+      kitty graphics protocol was divided, and its data came out as text.
+    - New $ctrl_string_re in :regex matches all the control strings,
+      OSC included.
+    - New discard => ['CONTROL'] removes all the control strings.
+
 2.3902 2026-11-16T04:33:54Z
 
     - With run-in, color sequences which follow the character taken
