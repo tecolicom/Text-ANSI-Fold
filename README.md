@@ -110,8 +110,10 @@ Some other easy-to-use interfaces are provided by sister module
 # REGULAR EXPRESSIONS
 
 Import-tag `:regex` gives the regular expressions `$reset_re`,
-`$color_re`, `$erase_re`, `$csi_re` and `$osc_re`, which match the
-ANSI sequences this module recognizes.
+`$color_re`, `$erase_re`, `$csi_re`, `$osc_re` and `$ctrl_string_re`,
+which match the ANSI sequences this module recognizes.  `$ctrl_string_re`
+matches all the control strings of ECMA-48: DCS, OSC, SOS, PM and
+APC, and `$osc_re` only OSC of them.
 
 # OBJECT INTERFACE
 
@@ -310,11 +312,14 @@ function as well as **new** and **configure** method.
     is `narrow` which means single column.  Set `wide` to tell the
     module to treat them as wide character.
 
-- **discard** => \[ `EL`, `OSC` \]
+- **discard** => \[ `EL`, `OSC`, `CONTROL` \]
 
     Specify the list reference of control sequence name to be discarded.
     **EL** means Erase Line; **OSC** means Operating System Command, defined
     in ECMA-48.  Erase Line right after RESET sequence is always kept.
+    **CONTROL** means all the control strings of ECMA-48: DCS, OSC, SOS,
+    PM and APC (see ["CONTROL STRINGS"](#control-strings)).  The text between them, such as
+    that of a hyperlink, is kept.
 
     When OSC is discarded, OSC 8 hyperlink state tracking is also
     disabled.
@@ -508,6 +513,20 @@ this module tolerates it for practical compatibility.
 
 The only exception is U+009C (STRING TERMINATOR), which is excluded
 because it terminates the OSC sequence.
+
+# CONTROL STRINGS
+
+DCS (DEVICE CONTROL STRING), SOS (START OF STRING), PM (PRIVACY
+MESSAGE) and APC (APPLICATION PROGRAM COMMAND) are, with OSC, the
+control strings of ECMA-48, and are taken as OSC is: the opening
+delimiter, the string and the terminator are kept together, have no
+width, and are never divided.  Images are sent to terminals this way:
+Sixel by DCS, and the kitty graphics protocol by APC.  A Sixel image
+takes room on the screen, which this module does not know.
+
+The string is of the characters OSC takes, and ends with STRING
+TERMINATOR or BEL, as OSC does.  The 8-bit forms of the delimiters
+are taken at the start of a text only, as those of OSC and CSI are.
 
 # SEE ALSO
 

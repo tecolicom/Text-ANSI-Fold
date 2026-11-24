@@ -33,6 +33,7 @@ our %EXPORT_TAGS = (
 	$erase_re
 	$csi_re
 	$osc_re
+	$ctrl_string_re
 	) ],
     );
 
@@ -72,10 +73,18 @@ our $osc_re          = qr{
     (?: \e\\ | \x9c | \a )		  # st: string terminator
 }x;
 
+our $ctrl_string_re  = qr{
+    # the control strings of ECMA-48 (5.6): DCS (8.3.27), OSC (8.3.89),
+    # SOS (8.3.128), PM (8.3.94) and APC (8.3.2)
+    (?: \e[P\]^_X] | [\x90\x98\x9d\x9e\x9f] )  # dcs, osc, pm, apc, sos
+    [^\x00-\x07\x0e-\x1f\x7f-\x9f]*+	  # string (excludes C1 controls)
+    (?: \e\\ | \x9c | \a )		  # st: string terminator
+}x;
+
 use constant SGR_RESET  => "\e[m";
 use constant OSC8_RESET => "\e]8;;\e\\";
 
-sub pwidth { vwidth $_[0] =~ s/\X\cH{1,2}//gr =~ s/${osc_re}|${csi_re}//gr }
+sub pwidth { vwidth $_[0] =~ s/\X\cH{1,2}//gr =~ s/${ctrl_string_re}|${csi_re}//gr }
 
 sub IsPrintableLatin {
     return <<"END";
@@ -356,7 +365,7 @@ sub fold {
 	# stay in the rest forever.
 	if (m/\A(\f+)/p) {
 	    my($ff, $post) = ($1, ${^POSTMATCH});
-	    last if $folded =~ s/(?:${csi_re}|${osc_re}|\f)//gr ne '';
+	    last if $folded =~ s/(?:${csi_re}|${ctrl_string_re}|\f)//gr ne '';
 	    ($folded, $_) = ($folded . $ff, $post);
 	    next;
 	}
@@ -372,13 +381,15 @@ sub fold {
 		next;
 	    }
 	}
-	# ECMA-48 OPERATING SYSTEM COMMAND
-	if (s/\A($osc_re)//) {
-	    my $osc = $1;
-	    unless ($obj->{discard}->{OSC}) {
-		$folded .= $osc;
-		if ($osc =~ /^(?:\e\]|\x9d)8;[^;]*;(.*?)(?:\e\\|\x9c|\a)$/) {
-		    $osc8_link = $1 ne '' ? $osc : undef;
+	# ECMA-48 control strings: DCS, OSC, SOS, PM and APC
+	if (s/\A($ctrl_string_re)//) {
+	    my $str = $1;
+	    my $osc = $str =~ /^(?:\e\]|\x9d)/;
+	    unless ($obj->{discard}->{CONTROL} or $osc && $obj->{discard}->{OSC}) {
+		$folded .= $str;
+		# OSC 8 hyperlink: reopened on the next line
+		if ($str =~ /^(?:\e\]|\x9d)8;[^;]*;(.*?)(?:\e\\|\x9c|\a)$/) {
+		    $osc8_link = $1 ne '' ? $str : undef;
 		}
 	    }
 	    next;
@@ -399,7 +410,7 @@ sub fold {
 
 	# sequences with no visible text after them stay on this line
 	last if $room < 1
-	    and not /\A(?:${csi_re}|${osc_re})*+(?:\z|\p{IsEOL})/;
+	    and not /\A(?:${csi_re}|${ctrl_string_re})*+(?:\z|\p{IsEOL})/;
 	if ($room < 2 and !$opt->{splitwide}) {
 	    last if $room != $head_room and &_startWideSpacing;
 	}
@@ -510,7 +521,7 @@ sub fold {
 	and my($w2) = /\A( (?: ${word_char_re} \cH ? ) + )/x
 	and my($lead, $w1) = $folded =~ m{
 		\A ## avoid CSI/OSC final char making a word
-		   ( (?: [^\e\x9b\x9d]* (?:${csi_re}|${osc_re})++ ) *+ .*? )
+		   ( (?: [^\e\x90\x98\x9b\x9d\x9e\x9f]* (?:${csi_re}|${ctrl_string_re})++ ) *+ .*? )
 		   ( (?: ${word_char_re} \cH ? ) + )
 		\z }x
     ) {
@@ -848,8 +859,10 @@ L<Text::ANSI::Fold::Util>.
 =head1 REGULAR EXPRESSIONS
 
 Import-tag C<:regex> gives the regular expressions C<$reset_re>,
-C<$color_re>, C<$erase_re>, C<$csi_re> and C<$osc_re>, which match the
-ANSI sequences this module recognizes.
+C<$color_re>, C<$erase_re>, C<$csi_re>, C<$osc_re> and C<$ctrl_string_re>,
+which match the ANSI sequences this module recognizes.  C<$ctrl_string_re>
+matches all the control strings of ECMA-48: DCS, OSC, SOS, PM and
+APC, and C<$osc_re> only OSC of them.
 
 =head1 OBJECT INTERFACE
 
@@ -1050,11 +1063,14 @@ Tells how to treat Unicode East Asian ambiguous characters.  Default
 is C<narrow> which means single column.  Set C<wide> to tell the
 module to treat them as wide character.
 
-=item B<discard> => [ C<EL>, C<OSC> ]
+=item B<discard> => [ C<EL>, C<OSC>, C<CONTROL> ]
 
 Specify the list reference of control sequence name to be discarded.
 B<EL> means Erase Line; B<OSC> means Operating System Command, defined
 in ECMA-48.  Erase Line right after RESET sequence is always kept.
+B<CONTROL> means all the control strings of ECMA-48: DCS, OSC, SOS,
+PM and APC (see L</CONTROL STRINGS>).  The text between them, such as
+that of a hyperlink, is kept.
 
 When OSC is discarded, OSC 8 hyperlink state tracking is also
 disabled.
@@ -1264,6 +1280,20 @@ this module tolerates it for practical compatibility.
 
 The only exception is U+009C (STRING TERMINATOR), which is excluded
 because it terminates the OSC sequence.
+
+=head1 CONTROL STRINGS
+
+DCS (DEVICE CONTROL STRING), SOS (START OF STRING), PM (PRIVACY
+MESSAGE) and APC (APPLICATION PROGRAM COMMAND) are, with OSC, the
+control strings of ECMA-48, and are taken as OSC is: the opening
+delimiter, the string and the terminator are kept together, have no
+width, and are never divided.  Images are sent to terminals this way:
+Sixel by DCS, and the kitty graphics protocol by APC.  A Sixel image
+takes room on the screen, which this module does not know.
+
+The string is of the characters OSC takes, and ends with STRING
+TERMINATOR or BEL, as OSC does.  The 8-bit forms of the delimiters
+are taken at the start of a text only, as those of OSC and CSI are.
 
 =head1 SEE ALSO
 
